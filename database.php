@@ -2,27 +2,79 @@
 
 // The SQL to uninstall this tool
 $DATABASE_UNINSTALL = array(
-    "drop table if exists {$CFG->dbprefix}/*Tool Table*/"
+    /*
+     * "drop table if exists {$CFG->dbprefix}flashcards_link"
+     * We probably want to keep these records even if the tool
+     * is uninstalled.
+     */
 );
 
 // The SQL to create the tables if they don't exist
 $DATABASE_INSTALL = array(
-    array( "{$CFG->dbprefix}/*Tool Table*/",
-        "create table {$CFG->dbprefix}/*Tool Table*/ (
+    array( "{$CFG->dbprefix}flashcards_set",
+        "create table {$CFG->dbprefix}flashcards_set (
+    SetID       INTEGER NOT NULL AUTO_INCREMENT,
+    UserName    varchar(30) NULL,
+    CourseName  varchar(200) NULL,
+    CardSetName varchar(255) NULL,
+    Category    varchar(50) NULL,
+    Modified    datetime NULL,
+    Active      int(1) DEFAULT '0',
+    Visible     int(1) DEFAULT '1',
+  
+    PRIMARY KEY(SetID)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8"),
+    array( "{$CFG->dbprefix}flashcards_link",
+        "create table {$CFG->dbprefix}flashcards_link (
     link_id     INTEGER NOT NULL,
-    user_id     INTEGER NOT NULL,
-    /* Columns for the tool go here */
+    SetID       INTEGER NULL,
 
-    CONSTRAINT `{$CFG->dbprefix}/*Tool Table*/_ibfk_1`
+    CONSTRAINT `{$CFG->dbprefix}flashcards_link_ibfk_1`
         FOREIGN KEY (`link_id`)
         REFERENCES `{$CFG->dbprefix}lti_link` (`link_id`)
         ON DELETE CASCADE ON UPDATE CASCADE,
+        
+    CONSTRAINT `{$CFG->dbprefix}flashcards_link_ibfk_2`
+        FOREIGN KEY (`SetID`)
+        REFERENCES `{$CFG->dbprefix}flashcards_set` (`SetID`)
+        ON UPDATE CASCADE,
 
-    CONSTRAINT `{$CFG->dbprefix}/*Tool Table*/_ibfk_2`
-        FOREIGN KEY (`user_id`)
-        REFERENCES `{$CFG->dbprefix}lti_user` (`user_id`)
-        ON DELETE CASCADE ON UPDATE CASCADE,
+    UNIQUE(link_id)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8"),
+    array( "{$CFG->dbprefix}flashcards",
+        "create table {$CFG->dbprefix}flashcards (
+    CardID      INTEGER NOT NULL AUTO_INCREMENT,
+    SetID       INTEGER NULL,
+    CardNum     INTEGER NULL,
+    CardNum2    INTEGER NULL,
+    SideA       varchar(1500) NULL,
+    SideB       varchar(1500) NULL,
+    File        varchar(255) DEFAULT '0',
+    Ref1        varchar(255) NULL,
+    Ref2        varchar(255) NULL,
+    Ref3        varchar(255) NULL,
+    Youtube     varchar(1000) NULL,
+    Editor      varchar(20) NULL,
+    Modified    datetime NULL,
+    TypeA       varchar(5) DEFAULT 'Text',
+    TypeB       varchar(5) DEFAULT 'Text',
+  
+    CONSTRAINT `{$CFG->dbprefix}flashcards_ibfk_1`
+        FOREIGN KEY (`SetID`)
+        REFERENCES `{$CFG->dbprefix}flashcards_set` (`SetID`)
+        ON UPDATE CASCADE,
 
-    UNIQUE(link_id, user_id)
+    PRIMARY KEY(CardID)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8"),
+    array( "{$CFG->dbprefix}flashcards_activity",
+        "create table {$CFG->dbprefix}flashcards_activity (
+    ActivityID  INTEGER NOT NULL AUTO_INCREMENT,
+    UserName    varchar(30) NULL,
+    FullName    varchar(50) NULL,
+    SetID       INTEGER NULL,
+    CardNum     INTEGER NOT NULL,
+    Modified    datetime NULL,
+  
+    PRIMARY KEY(ActivityID)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8")
 );
