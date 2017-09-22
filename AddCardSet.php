@@ -1,5 +1,5 @@
 <?php
-require_once "../config.php";
+require_once('../config.php');
 use \Tsugi\Core\Settings;
 use \Tsugi\Core\LTIX;
 $LAUNCH = LTIX::requireData();
@@ -10,10 +10,12 @@ $old_code = Settings::linkGet('code', '');
 
 // View
 $OUTPUT->header();
+
+include("tool-header.html");
+
 $OUTPUT->bodyStart();
 
 include("menu.php");
-echo "<br><br><br>";
 /*
 
  $rows = $PDOX->allRowsDie("SELECT * FROM flashcard where SetID=".$_GET["SetID"]." order by CardNum", array(':LI' => $LINK->id));

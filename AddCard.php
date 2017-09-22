@@ -12,6 +12,7 @@ $OUTPUT->header();
 $OUTPUT->bodyStart();
 
 include("menu.php");
+
 echo "<br><br><br>";
 
 if ( $USER->instructor ) {
@@ -22,8 +23,6 @@ if ( $USER->instructor ) {
         $Total++;
     }
     $Next = $Total+1;
-
-
 
     ?>
 

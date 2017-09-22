@@ -40,6 +40,10 @@ if ( $USER->instructor ) {
 
 
 
+    <ul class="breadcrumb">
+        <li><a href="index.php">All Card Sets</a></li>
+        <li></li>
+    </ul>
 
 
     <span style="padding-left:20px;"></span><a class='btn btn-primary' href="AddCard.php?SetID=<?php echo $_GET["SetID"];?>">Add New Card</a>

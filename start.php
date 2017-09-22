@@ -4,7 +4,6 @@ require_once "../config.php";
 // The Tsugi PHP API Documentation is available at:
 // http://do1.dr-chuck.com/tsugi/phpdoc/namespaces/Tsugi.html
 
-use \Tsugi\Core\Settings;
 use \Tsugi\Core\LTIX;
 
 // No parameter means we require CONTEXT, USER, and LINK
