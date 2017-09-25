@@ -1,73 +1,61 @@
 <?php
-require_once('../config.php');
-use \Tsugi\Core\Settings;
+require_once "../config.php";
+
 use \Tsugi\Core\LTIX;
+
+// Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
-// Model
 $p = $CFG->dbprefix;
-$old_code = Settings::linkGet('code', '');
 
-// View
 $OUTPUT->header();
 
 include("tool-header.html");
 
 $OUTPUT->bodyStart();
 
-include("menu.php");
-/*
-
- $rows = $PDOX->allRowsDie("SELECT * FROM flashcard where SetID=".$_GET["SetID"]." order by CardNum", array(':LI' => $LINK->id));
- foreach ( $rows as $row ) {
-        $CardNum = $row['CardNum'];
- }
-
-*/
-
-
 if ( $USER->instructor ) {
-// instructor area
+
+    include("menu.php");
+
     ?>
 
+    <form action="AddCardSet_Submit.php" method="post">
 
+        <div class="row">
+            <div class="col-sm-offset-1 col-sm-8">
+                <h3>Create New Card Set</h3>
+            </div>
 
+            <div class="col-sm-offset-1 col-sm-8">
+                <div class="form-group">
+                    <label class="control-label" for="CourseName">Course Name</label>
+                    <p class="form-control-staic">
+                        <?php echo($_SESSION["CourseName"]); ?>
+                        <input name="CourseName" id="CourseName" type="hidden" value="<?php echo($_SESSION["CourseName"]); ?>"/>
+                    </p>
+                </div>
 
+                <div class="form-group">
+                    <label class="control-label" for="CardSetName">Card Set Title</label>
+                    <input id="CardSetName" name="CardSetName" class="form-control" required/>
+                </div>
 
-    <form action="AddCardSet_Submit.php" method="post" >
-
-        <table class='table table-bordered'>
-            <tr><td valign="top"><strong>Course Name</strong></td> <td valign="top"><?php echo $_SESSION["CourseName"]; ?> <input name="CourseName" type="hidden" value="<?php echo $_SESSION["CourseName"]; ?>" /></td></tr>
-            <tr><td width="26%"><strong>Card Set Title </strong></td><td width="74%"><input name="CardSetName" required="required" id="CardSetName" style="width:40%"  /></td></tr>
-            <tr><td colspan="2"><br />
-
-                    <p>
-
-                        <input class="btn btn-primary" type="submit" value="     Add This Flashcard Set    " />
-
-                    </p></td>
-
-            </tr>
-        </table>
+                <input class="btn btn-primary" type="submit" value="Add Flashcard Set" />
+            </div>
+        </div>
 
     </form>
 
-
-
-
-
-
-
-
     <?php
 
+} else {
+    // student so send back to index
+    header( 'Location: '.addSession('index.php') ) ;
 }
-else{
-    // student area
 
-}
+$OUTPUT->footerStart();
 
+include("tool-footer.html");
 
-$OUTPUT->footer();
-
-
+$OUTPUT->footerEnd();

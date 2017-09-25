@@ -2,6 +2,12 @@
 * {
     border-radius: 0 !important;
 }
+a.disabled, a.disabled:hover {
+    cursor: not-allowed;
+    pointer-events: none;
+    opacity: .65;
+    box-shadow: none;
+}
 .navbar-header {
     padding-right: 16px;
     padding-left: 16px;
@@ -9,11 +15,24 @@
 .navbar-nav .fa-stack {
     position: absolute;
 }
+div.row {
+    margin-left: 0;
+    margin-right: 0;
+}
 span.menu-with-icon {
     padding-left: 2.2em;
 }
 .panel-heading > a.pull-right {
     margin-top: 1em;
+}
+.panel-heading .deleteCard {
+    margin-left: 8px;
+}
+.panel-heading h3 > a {
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .panel-success .panel-heading h3 > a {
     color: #3c763d;
@@ -21,7 +40,6 @@ span.menu-with-icon {
 .panel-body a:hover {
     text-decoration: none;
 }
-
 .cards-pile {
     position: relative;
 }
@@ -33,7 +51,6 @@ span.menu-with-icon {
     height: 100%;
     border: 1px solid #ccc;
 }
-
 .cards-pile::before {
     top: -2px;
     left: 0;
@@ -42,7 +59,6 @@ span.menu-with-icon {
     transform: rotate(1deg);
     background-color: white;
 }
-
 .cards-pile::after {
     top: 1px;
     left: -2px;
@@ -51,9 +67,19 @@ span.menu-with-icon {
     background-color: transparent;
     transform: rotate(-1deg);
 }
-
 .cards-pile > * {
     position: relative;
     z-index: 20;
     background-color: white;
+}
+/* List */
+h3.card-order a {
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+.sideA, .sideB {
+    word-wrap: break-word;
+}
+p.addCard {
+    margin: 0 0 10px 15px;
 }

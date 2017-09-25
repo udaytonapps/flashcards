@@ -1,123 +1,92 @@
 <?php
 require_once "../config.php";
-use \Tsugi\Core\Settings;
+
 use \Tsugi\Core\LTIX;
+
+// Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
-// Model
 $p = $CFG->dbprefix;
 
-// View
 $OUTPUT->header();
+
+include("tool-header.html");
+
 $OUTPUT->bodyStart();
 
-include("menu.php");
-echo "<br><br><br>";
 if ( $USER->instructor ) {
-// instructor area
 
-    $rows0 = $PDOX->allRowsDie("SELECT * FROM flashcards where CardID=".$_GET["CardID"]);
-    foreach ( $rows0 as $row ) {
-        ?>
+    $setId = $_GET["SetID"];
 
+    $set = $PDOX->rowDie("select * from {$p}flashcards_set where SetID=".$setId.";");
+    $card = $PDOX->rowDie("SELECT * FROM {$p}flashcards where CardID=".$_GET["CardID"].";");
 
+    include("menu.php");
 
+    echo('
+        <ul class="breadcrumb">
+            <li><a href="index.php">All Card Sets</a></li>
+            <li><a href="list.php?SetID='.$setId.'">'.$set["CardSetName"].'</a></li>
+            <li>Edit Card</li>
+        </ul>
+    ');
 
+    ?>
 
+    <form method="post" action="EditCard_Submit.php">
 
+        <div class="row">
+            <div class="col-sm-offset-1 col-sm-8">
+                <h3>Editing Card <?php echo($card["CardNum"]); ?></h3>
+            </div>
 
+            <div class="col-sm-offset-1 col-sm-8">
+                <div class="form-group">
+                    <label class="control-label" for="SideA">Side A</label>
+                    <textarea class="form-control" name="SideA" id="SideA" rows="5" autofocus required><?php echo($card["SideA"]); ?></textarea>
+                </div>
 
+                <div class="form-group">
+                    <label class="control-label" for="TypeA">Side A Type</label>
+                    <select class="form-control" id="TypeA" name="TypeA">
+                        <option value="Text" <?php if($card["TypeA"] == "Text"){echo("selected");}?>>Text</option>
+                        <option value="Image" <?php if($card["TypeA"] == "Image"){echo("selected");}?>>Image</option>
+                        <option value="mp3" <?php if($card["TypeA"] == "mp3"){echo("selected");}?>>Audio (mp3)</option>
+                        <option value="Video" <?php if($card["TypeA"] == "Video"){echo("selected");}?>>YouTube / Warpwire</option>
+                    </select>
+                </div>
 
+                <div class="form-group">
+                    <label class="control-label" for="SideB">Side B</label>
+                    <textarea class="form-control" name="SideB" id="SideB" rows="5" required><?php echo($card["SideB"]); ?></textarea>
+                </div>
 
-        <form  method="post" action="EditCard_Submit.php">
+                <div class="form-group">
+                    <label class="control-label" for="TypeB">Side B Type</label>
+                    <select class="form-control" id="TypeB" name="TypeB">
+                        <option value="Text" <?php if($card["TypeB"] == "Text"){echo("selected");}?>>Text</option>
+                        <option value="Image" <?php if($card["TypeB"] == "Image"){echo("selected");}?>>Image</option>
+                    </select>
+                </div>
 
+                <input type="hidden" name="SetID" value="<?php echo $_GET["SetID"];?>"/>
+                <input type="hidden" name="CardID" value="<?php echo $_GET["CardID"];?>"/>
 
+                <input type="submit" value="Update Card" class="btn btn-primary">
+                <a href="list.php?SetID=<?php echo $_GET["SetID"];?>" class="btn btn-danger">Cancel</a>
 
-            <table class='table table-bordered'>
+            </div>
+        </div>
+    </form>
 
-                <tr>
-
-                    <td style="vertical-align:top; ">Card#</td>
-
-                    <td colspan=2><?php   echo $row["CardNum"]; ?>
-
-                        <input type="hidden" name="SetID" value="<?php echo $_GET["SetID"];?>"/>
-                        <input type="hidden" name="CardID" value="<?php echo $_GET["CardID"];?>"/>
-
-                    </td>
-
-                </tr>
-
-                <tr>
-                    <td style="vertical-align:top">Side A</td>
-
-
-                    <td><textarea name="SideA" id="SideA" cols="45" rows="5" autofocus style="width:100%" required="required" ><?php   echo $row["SideA"]; ?></textarea></td>
-                    <td><input type="radio" name="TypeA" value="Text" <?php  if ($row["TypeA"] == "Text"){echo "checked";}?>> Text<br>
-                        <input type="radio" name="TypeA" value="Image"  <?php  if ($row["TypeA"] == "Image"){echo "checked";}?>> Image<br>
-                        <input type="radio" name="TypeA" value="mp3"  <?php  if ($row["TypeA"] == "mp3"){echo "checked";}?>> mp3<br>
-                        <input type="radio" name="TypeA" value="Video"  <?php  if ($row["TypeA"] == "Video"){echo "checked";}?>> Youtube/Warpwire
-                    </td>
-                </tr>
-
-                <tr>
-
-                    <td width="100" style="vertical-align:top">Side B</td>
-
-                    <td ><textarea name="SideB" id="SideB" cols="45" rows="5" style="width:100%"><?php   echo $row["SideB"]; ?></textarea></td>
-                    <td><input type="radio" name="TypeB" value="Text" <?php  if ($row["TypeB"] == "Text"){echo "checked";}?> > Text<br>
-                        <input type="radio" name="TypeB" value="Image" <?php  if ($row["TypeB"] == "Image"){echo "checked";}?>> Image</td>
-                </tr>
-
-                <tr>
-
-                    <td height="70" colspan="3">
-
-                        <br>
-
-                        <p>
-
-                            <input type="submit" value="Update  Card" class="btn btn-primary" >  <span style="padding-left:30px;" ></span>  <a href="list.php?SetID=<?php echo $_GET["SetID"];?>" class="btn btn-danger"> Cancel </a>
-
-                        </p></td>
-
-                </tr>
-
-            </table>
-
-
-
-
-
-
-
-        </form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        <?php
-    }// for
-
-}
-else{
-    // student area
-
+    <?php
+} else {
+    // student so send back to index
+    header( 'Location: '.addSession('index.php') ) ;
 }
 
+$OUTPUT->footerStart();
 
-$OUTPUT->footer();
+include("tool-footer.html");
 
-
+$OUTPUT->footerEnd();

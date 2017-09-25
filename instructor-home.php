@@ -2,7 +2,7 @@
 
 echo('<h2>Card Sets</h2>');
 
-$rows = $PDOX->allRowsDie("select * from {$p}flashcards_set where CourseName='".$_SESSION["CourseName"]."'");
+$rows = $PDOX->allRowsDie("select * from {$p}flashcards_set where CourseName='".$_SESSION["CourseName"]."' order by CardSetName;'");
 
 echo('<div class="row">');
 
@@ -36,7 +36,7 @@ echo('<div class="row">');
                                     '.$row["CardSetName"].'
                                 </a>
                             </h3>
-                            <small>' . count($cards) . ' Cards</small>
+                            <small>'.count($cards).' Cards</small>
                         </div>
                         <div class="panel-body">
                             <div class="row">
@@ -49,21 +49,21 @@ echo('<div class="row">');
                             </div>
                             <div class="row">
                                 <div class="col-xs-3 text-center">
-                                    <a href="playcard.php?SetID='.$row["SetID"].'&CardNum=1&Flag=A">
+                                    <a href="playcard.php?SetID='.$row["SetID"].'&CardNum=1&Flag=A" ');if(count($cards) == 0){echo('class="disabled"');}echo('>
                                     <span class="fa fa-2x fa-th-large"></span>
                                     <br />
                                     <small>Flashcards</small>
                                     </a>
                                 </div>
                                 <div class="col-xs-3 text-center" style="border-right: 1px solid #ccc;">
-                                    <a href="start.php?SetID='.$row["SetID"].'">
+                                    <a href="start.php?SetID='.$row["SetID"].'" ');if(count($cards) < 5){echo('class="disabled"');}echo('>
                                     <span class="fa fa-2x fa-check-square-o"></span>
                                     <br />
                                     <small>Review</small>
                                     </a>
                                 </div>
                                 <div class="col-xs-3 text-center">
-                                    <a href="usage.php?Page=1&SetID='.$row["SetID"].'&CardSetName='.$row["CardSetName"].'">
+                                    <a href="usage.php?Page=1&SetID='.$row["SetID"].'&CardSetName='.$row["CardSetName"].'" ');if(count($cards) == 0){echo('class="disabled"');}echo('>
                                     <span class="fa fa-2x fa-bar-chart"></span>
                                     <br />
                                     <small>Usage</small>

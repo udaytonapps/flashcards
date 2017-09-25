@@ -1,93 +1,112 @@
 <?php
 require_once "../config.php";
-use \Tsugi\Core\Settings;
+
 use \Tsugi\Core\LTIX;
 
-// No parameter means we require CONTEXT, USER, and LINK
+// Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
-// Model
 $p = $CFG->dbprefix;
 
-// View
 $OUTPUT->header();
+
+include("tool-header.html");
+
 $OUTPUT->bodyStart();
 
-$Total = 0;
-
-$rows0 = $PDOX->allRowsDie("SELECT * FROM flashcards where SetID=".$_GET["SetID"]);
-foreach ( $rows0 as $row ) {
-    $Total++;
-}
-
-
-
-
-include("menu.php");
-
 if ( $USER->instructor ) {
-    ?>
 
+    $setId = $_GET["SetID"];
 
+    $cardsInSet = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$setId." order by CardNum;");
+    $set = $PDOX->rowDie("select * from {$p}flashcards_set where SetID=".$setId.";");
 
-    <script>
-        function ConfirmDelete()
-        {
-            return confirm("Are you sure you want to delete? You can't undo this.");
+    $Total = count($cardsInSet);
+
+    include("menu.php");
+
+    echo('
+        <ul class="breadcrumb">
+            <li><a href="index.php">All Card Sets</a></li>
+            <li>'.$set["CardSetName"].'</li>
+        </ul>
+        
+        <div class="row cardRow">
+
+        <p>
+            <a class="btn btn-success" href="AddCard.php?SetID='.$_GET["SetID"].'"><span class="fa fa-plus"></span> Add New Card</a>        
+        </p>
+        
+        <h2>Cards in "'.$set["CardSetName"].'" <span class="badge">'.$Total.' Cards</span></h2>
+    ');
+
+    if ($Total == 0) {
+        echo('<p><em>There are currently no cards in this set.</em></p>');
+    } else {
+        $cardNum = 1;
+        foreach ( $cardsInSet as $row ) {
+
+            echo('
+            <div class="col-md-6">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <a class="btn btn-danger pull-right deleteCard" href="DeleteCard.php?CardID='.$row["CardID"].'&SetID='.$row["SetID"].'" onclick="return ConfirmDeleteCard();"><span class="fa fa-trash-o"></span></a>
+                        <a class="btn btn-primary pull-right" href="EditCard.php?CardID='.$row["CardID"].'&SetID='.$row["SetID"].'">Edit</a>
+                        <h3 class="card-order">
+                            '.$cardNum.'. 
+        ');
+            if($cardNum != 1) {
+                echo('
+                            <a href="move.php?CardID=' . $row["CardID"] . '&CardNum=' . $row["CardNum"] . '&SetID=' . $_GET["SetID"] . '&Flag=1">
+                                <span class="fa fa-chevron-circle-up"></span>
+                            </a>
+                ');
+            }
+            if($cardNum != $Total) {
+                echo('
+                            <a href="move.php?CardID=' . $row["CardID"] . '&CardNum=' . $row["CardNum"] . '&SetID=' . $_GET["SetID"] . '&Flag=0">
+                                <span class="fa fa-chevron-circle-down"></span>
+                            </a>
+                ');
+            }
+            echo('
+                        </h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="col-sm-6 sideA">
+                            <h4>Side A</h4>
+        ');
+
+            if($row["TypeA"] == "Image" || $row["TypeA"] == "mp3" || $row["TypeA"] == "Video") {
+                echo('<a href="'.$row["SideA"].'" target="_blank">'.$row["SideA"].'</a>');
+            } else {
+                echo($row["SideA"]);
+            }
+
+            echo('
+                        </div>
+                        <div class="col-sm-6 sideB">
+                            <h4>Side B</h4>
+                            '.$row["SideB"].'
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        ');
+            /* Make sure only two cards per row */
+            if ($cardNum % 2 == 0) {
+                echo('</div><div class="row cardRow">');
+            }
+            $cardNum++;
         }
-
-    </script>
-
-
-
-    <ul class="breadcrumb">
-        <li><a href="index.php">All Card Sets</a></li>
-        <li></li>
-    </ul>
-
-
-    <span style="padding-left:20px;"></span><a class='btn btn-primary' href="AddCard.php?SetID=<?php echo $_GET["SetID"];?>">Add New Card</a>
-    <br><br><br><br>
-
-
-
-    <?php
-
-    $rows = $PDOX->allRowsDie("SELECT * FROM flashcards where SetID=".$_GET["SetID"]." order by CardNum");
-
-    $rowNum=0;
-
-
-    echo('<table class="table table-bordered table-hover"  width=800>'."\n");
-    echo("<tr><th> #</th><th></th><th>Side A </th><th> Side B</th><th>Edit</th><th>Remove</th></tr>");
-    foreach ( $rows as $row ) {
-
-
-        $rowNum++;
-
-        echo "<tr><td width='50'>".$row['CardNum']."</td>";
-
-
-
-        echo "<td width='50'>";
-
-        if($rowNum != 1){echo "<a  href='move.php?CardID=".$row["CardID"]."&CardNum=".$row["CardNum"]."&SetID=".$_GET["SetID"]."&Flag=1' ><span class='glyphicon glyphicon-arrow-up' ></span></a>"; }
-        if($rowNum != $Total){
-            echo "<a style='float:right;' href='move.php?CardID=".$row["CardID"]."&CardNum=".$row["CardNum"]."&SetID=".$_GET["SetID"]."&Flag=0' ><span class='glyphicon glyphicon-arrow-down' ></span></a>"; }
-        echo("</td><td>".$row['SideA']."</td>");
-        echo("</td><td> ");
-        echo($row['SideB']);
-        echo("</td><td width='100'><a class='btn btn-primary' href='EditCard.php?CardID=".$row["CardID"]."&SetID=".$row["SetID"]."' > Edit</a></td>");
-        echo("<td width='100'><a class='btn btn-danger' href='DeleteCard.php?CardID=".$row["CardID"]."&SetID=".$row["SetID"]."' onclick= 'return ConfirmDelete();'> Remove</a></td>");
-        echo("</tr>");
     }
-    echo("</table>\n");
-
-
-    echo "<br><br>";
+    echo('</div>');
 }
 
+$OUTPUT->footerStart();
 
-$OUTPUT->footer();
+include("tool-footer.html");
 
+$OUTPUT->footerEnd();
 

@@ -88,7 +88,7 @@ if ( $USER->instructor ) {
                     <span style="padding-left:30px;" ></span>
                     <a href="index.php" class="btn btn-primary"> Cancel </a>
                     <span style="padding-left:30px;" ></span>
-                    <a href="DeleteCardSet.php?SetID=<?php echo $SetID;?>" class='btn btn-danger' style="float:right;" onclick="return ConfirmDelete();" > Remove </a>
+                    <a href="DeleteCardSet.php?SetID=<?php echo $SetID;?>" class='btn btn-danger' style="float:right;" onclick="return ConfirmDeleteCardSet();" > Remove </a>
 
                 </td>
 
