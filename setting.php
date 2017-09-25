@@ -1,133 +1,76 @@
 <?php
 require_once "../config.php";
-use \Tsugi\Core\Settings;
+
 use \Tsugi\Core\LTIX;
+
+// Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
-// Model
 $p = $CFG->dbprefix;
 
-// View
 $OUTPUT->header();
+
+include("tool-header.html");
+
 $OUTPUT->bodyStart();
 
-include("menu.php");
-echo "<br><br><br>";
-
-
 if ( $USER->instructor ) {
-// instructor area
 
+    $setId = $_GET["SetID"];
 
-    $SetID = $_GET["SetID"];
+    $cardsInSet = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$setId." order by CardNum;");
+    $set = $PDOX->rowDie("select * from {$p}flashcards_set where SetID=".$setId.";");
 
-    $rows0 = $PDOX->allRowsDie("SELECT * FROM flashcards_set where SetID=".$SetID);
-    foreach ( $rows0 as $row ) {
-        $CardSetName = $row["CardSetName"];
-        $Active = $row["Active"];
-    }
+    $Total = count($cardsInSet);
+
+    $CardSetName = $set["CardSetName"];
+    $Active = $set["Active"];
+
+    include("menu.php");
 
     ?>
 
-
-
-
-
-    <script>
-        function ConfirmDelete()
-        {
-            return confirm("Are you sure you want to delete? You can't undo this.");
-        }
-
-    </script>
-
-
-
-
-
-
-
     <form  method="post" action="setting_submit.php">
 
-        <table class="table table-bordered" >
+        <div class="row">
+            <div class="col-sm-offset-1 col-sm-8">
+                <h3>Edit Card Set</h3>
+            </div>
 
-            <tr>
+            <div class="col-sm-offset-1 col-sm-8">
 
-                <td style="vertical-align:top">Title</td>
+                <div class="form-group">
+                    <label class="control-label" for="CardSetName">Card Set Title</label>
+                    <input id="CardSetName" name="CardSetName" class="form-control" value="<?php echo($CardSetName); ?>" required/>
+                </div>
 
-                <td><input type="hidden" name="SetID" value="<?php echo $_GET["SetID"];?>"/>
-                    <input name="CardSetName" id="CardSetName" style="width:100%;"     Value="<?php echo $CardSetName;?>"/>
-                </td>
+                <div class="form-group">
+                    <div class="radio">
+                        <label><input type="radio" name="Active" value="1" <?php if($Active==1){echo('checked="checked"');}?>"/>Publish</label>
+                    </div>
+                    <div class="radio">
+                        <label><input type="radio" name="Active" value="0" <?php if($Active==0){echo('checked="checked"');}?>"/>Unpublish</label>
+                    </div>
+                </div>
 
-            </tr>
+                <input type="hidden" id="SetID" name="SetID" value="<?php echo $_GET["SetID"];?>"/>
 
-            <tr>
-
-                <td width="100" style="vertical-align:top">Publish</td>
-
-                <td ><input type="radio" name="Active" value='1' <?php if($Active ==1){ echo "checked='checked'";  } ?> > Publish<br>
-                    <input type="radio" name="Active" value='0'      <?php if($Active ==0){ echo "checked='checked'";  } ?> > Unpublish</td>
-
-            </tr>
-
-
-
-            <tr>
-
-                <td   colspan="2">
-
-                    <br />
-
-
-
-
-
-
-
-                    <input type="submit" value="     Update     " class="btn btn-primary" >
-                    <span style="padding-left:30px;" ></span>
-                    <a href="index.php" class="btn btn-primary"> Cancel </a>
-                    <span style="padding-left:30px;" ></span>
-                    <a href="DeleteCardSet.php?SetID=<?php echo $SetID;?>" class='btn btn-danger' style="float:right;" onclick="return ConfirmDeleteCardSet();" > Remove </a>
-
-                </td>
-
-            </tr>
-
-        </table>
-
-
-
-
-
-
-
+                <input class="btn btn-primary" type="submit" value="Update Flashcard Set" />
+                <a href="index.php" class="btn btn-danger">Cancel</a>
+                <a href="DeleteCardSet.php?SetID=<?php echo($setId); ?>" class="btn btn-danger pull-right" onclick="return ConfirmDeleteCardSet();"><span class="fa fa-trash-o"></span> Delete</a>
+            </div>
+        </div>
     </form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     <?php
 
+} else {
+    // student so send back to index
+    header( 'Location: '.addSession('index.php') ) ;
 }
-else{
-    // student area
 
-}
+$OUTPUT->footerStart();
 
+include("tool-footer.html");
 
-$OUTPUT->footer();
-
-
+$OUTPUT->footerEnd();
