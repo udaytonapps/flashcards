@@ -53,7 +53,7 @@ echo('<div class="row">');
                             </div>
                             <div class="row">
                                 <div class="col-xs-3 text-center">
-                                    <a href="playcard.php?SetID='.$row["SetID"].'&CardNum=1&Flag=A" ');if(count($cards) == 0){echo('class="disabled"');}echo('>
+                                    <a href="playcard.php?SetID='.$row["SetID"].'&CardNum=1&CardNum2=0&Flag=A" ');if(count($cards) == 0){echo('class="disabled"');}echo('>
                                     <span class="fa fa-2x fa-th-large"></span>
                                     <br />
                                     <small>Flashcards</small>

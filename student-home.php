@@ -37,7 +37,7 @@ if (count($visibleSets) == 0) {
                     <div class="panel-body">
                         <div class="row">
                             <div class="col-xs-6 text-center" style="border-right: 1px solid #ccc;">
-                                <a href="playcard.php?SetID='.$set["SetID"].'&CardNum=1&Flag=A"');if(count($cards) == 0){echo(' class="disabled"');}echo('>
+                                <a href="playcard.php?SetID='.$set["SetID"].'&CardNum=1&CardNum2=0&Flag=A"');if(count($cards) == 0){echo(' class="disabled"');}echo('>
                                     <span class="fa fa-2x fa-th-large"></span>
                                     <br />
                                     <small>Study</small>

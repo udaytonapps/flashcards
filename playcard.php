@@ -14,15 +14,11 @@ include("tool-header.html");
 
 $OUTPUT->bodyStart();
 
-if ($_GET["Shuffle"] == 1) {
-
-}
-
-
 $CardNum = $_GET["CardNum"];
+$CardNum2 = $_GET["CardNum2"];
+
 $_SESSION["CardNum"] = $CardNum;
-$Next = $CardNum + 1;
-$Prev = $CardNum - 1;
+
 $Flag = $_GET["Flag"];
 $UserName = $_SESSION["UserName"];
 $FullName = $_SESSION["FullName"];
@@ -45,13 +41,30 @@ if ( $USER->instructor ) {
 $setId = $_GET["SetID"];
 $_SESSION["SetID"] = $setId;
 
-$cardsInSet = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$setId." order by CardNum;");
+$cardsInSet = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$setId.";");
 
 $set = $PDOX->rowDie("select * from {$p}flashcards_set where SetID=".$setId.";");
 
 $Total = count($cardsInSet);
 
-$percentComplete = $CardNum / $Total * 100;
+if ($CardNum == 0) {
+    // We are in "shuffle" mode
+    $Next = 0;
+    $Prev = 0;
+    $Next2 = $CardNum2 + 1;
+    $Prev2 = $CardNum2 - 1;
+    $percentComplete = $CardNum2 / $Total * 100;
+    $theCard = $PDOX->rowDie("SELECT * FROM {$p}flashcards where SetID=".$setId." AND CardNum2=".$CardNum2.";");
+    $onCard = $CardNum2;
+} else {
+    $Next = $CardNum + 1;
+    $Prev = $CardNum - 1;
+    $Next2 = 0;
+    $Prev2 = 0;
+    $percentComplete = $CardNum / $Total * 100;
+    $theCard = $PDOX->rowDie("SELECT * FROM {$p}flashcards where SetID=".$setId." AND CardNum=".$CardNum.";");
+    $onCard = $CardNum;
+}
 
     echo('
         <ul class="breadcrumb">
@@ -62,69 +75,66 @@ $percentComplete = $CardNum / $Total * 100;
         <div class="row cardRow">
             <div class="col-sm-3 play-menu">
                 <h3>'.$set["CardSetName"].'</h3>
-                <span>Progress <strong>'.$CardNum.'/'.$Total.'</strong></span>
+                <span>Progress <strong>'.$onCard.'/'.$Total.'</strong></span>
                 <div class="progress">
                     <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="'.$percentComplete.'" aria-valuemin="0" aria-valuemax="100" style="width:'.$percentComplete.'%">
                         <span class="sr-only">'.$percentComplete.'% Complete</span>
                     </div>
                 </div>
-                <a class="btn btn-primary" href="playcard.php?SetID='.$set["SetID"].'&Flag=A&Shuffle=1"><span class="fa fa-random"></span> Shuffle Cards</a>            
+                <a class="btn btn-primary" href="shuffle.php?SetID='.$set["SetID"].'"><span class="fa fa-random"></span> Shuffle Cards</a>            
             </div>
             <div class="col-sm-9">    
-    ');
-
-    $theCard = $PDOX->rowDie("SELECT * FROM {$p}flashcards where SetID=".$setId." AND CardNum=".$CardNum.";");
-
-    echo('
-        <div id="play-card-container">
-            <div class="front">
-                <span class="h4 text-muted">Side A</span>
-                <div class="play-card text-center">
-                    <span>');
-                        if ($theCard["TypeA"] == "Image") {
-                            echo('<img src="'.$theCard["SideA"].'">');
-                        } else if ($theCard["TypeA"] == "mp3") {
-                            echo('<audio controls><source src="'.$theCard["SideA"].'" type="audio/mpeg">Your browser does not support the audio element.</audio>');
-                        } else if ($theCard["TypeA"] == "Video") {
-                            $URL = $theCard["SideA"];
-                            if (strpos($URL, 'youtube') == true) {
-                                if (strpos($URL, 'embed') == false) {
-                                    $Youtube = $theCard["SideA"];
-                                    $Code = explode("=", $Youtube);
-                                    $URL = "https://www.youtube.com/embed/".$Code[1];
+                <div id="play-card-container">
+                    <div class="front">
+                        <span class="h4 text-muted">Side A</span>
+                        <div class="play-card text-center">
+                            <span>');
+                                if ($theCard["TypeA"] == "Image") {
+                                    echo('<img src="'.$theCard["SideA"].'">');
+                                } else if ($theCard["TypeA"] == "mp3") {
+                                    echo('<audio controls><source src="'.$theCard["SideA"].'" type="audio/mpeg">Your browser does not support the audio element.</audio>');
+                                } else if ($theCard["TypeA"] == "Video") {
+                                    $URL = $theCard["SideA"];
+                                    if (strpos($URL, 'youtube') == true) {
+                                        if (strpos($URL, 'embed') == false) {
+                                            $Youtube = $theCard["SideA"];
+                                            $Code = explode("=", $Youtube);
+                                            $URL = "https://www.youtube.com/embed/".$Code[1];
+                                        }
+                                    }
+                                    echo ('<div class="video-container"><iframe src="'.$URL.'" class="video" frameborder="0"></iframe></div>');
+                                } else {
+                                    echo($theCard["SideA"]);
                                 }
-                            }
-                            echo ('<div class="video-container"><iframe src="'.$URL.'" class="video" frameborder="0"></iframe></div>');
-                        } else {
-                            echo($theCard["SideA"]);
-                        }
-                    echo('</span>
+                            echo('</span>
+                        </div>
+                        <span class="h3 text-muted"><span class="fa fa-undo"></span> Click to flip</span>
+                    </div>
+                    <div class="back">
+                        <span class="h4 text-muted">Side B</span>
+                        <div class="play-card text-center">
+                            <span>');
+                                if ($theCard["TypeB"] == "Image") {
+                                    echo('<img src="'.$theCard["SideB"].'">');
+                                } else {
+                                    echo($theCard["SideB"]);
+                                }
+                            echo('</span></div>
+                        <span class="h3 text-muted"><span class="fa fa-undo"></span> Click to flip</span>
+                    </div>                    
                 </div>
-                <span class="h3 text-muted"><span class="fa fa-undo"></span> Click to flip</span>
+        
+                <input type="hidden" id="sess" value="'.$_GET["PHPSESSID"].'">
+        
+                <div class="prev-next text-center">
+                    <a href="playcard.php?SetID='.$setId.'&CardNum='.$Prev.'&CardNum2='.$Prev2.'&Flag=A" ');if($Prev == 0 && $Prev2 == 0){echo('class="disabled"');} echo('>
+                        <span class="fa fa-3x fa-chevron-circle-left"></span>
+                    </a>
+                    <a href="playcard.php?SetID='.$setId.'&CardNum='.$Next.'&CardNum2='.$Next2.'&Flag=A" ');if($Next > $Total || $Next2 > $Total){echo('class="disabled"');} echo('>
+                        <span class="fa fa-3x fa-chevron-circle-right"></span>
+                    </a>
+                </div>
             </div>
-            <div class="back">
-                <span class="h4 text-muted">Side B</span>
-                <div class="play-card text-center">
-                    <span>');
-                        if ($theCard["TypeB"] == "Image") {
-                            echo('<img src="'.$theCard["SideB"].'">');
-                        } else {
-                            echo($theCard["SideB"]);
-                        }
-                    echo('</span></div>
-                <span class="h3 text-muted"><span class="fa fa-undo"></span> Click to flip</span>
-            </div>                    
-        </div>
-        
-        <input type="hidden" id="sess" value="'.$_GET["PHPSESSID"].'">
-        
-        <div class="prev-next text-center">
-            <a href="playcard.php?SetID='.$setId.'&CardNum='.$Prev.'&Flag=A" ');if($Prev == 0){echo('class="disabled"');} echo('>
-                <span class="fa fa-3x fa-chevron-circle-left"></span>
-            </a>
-            <a href="playcard.php?SetID='.$setId.'&CardNum='.$Next.'&Flag=A" ');if($Next > $Total){echo('class="disabled"');} echo('>
-                <span class="fa fa-3x fa-chevron-circle-right"></span>
-            </a>
         </div>
     ');
 
