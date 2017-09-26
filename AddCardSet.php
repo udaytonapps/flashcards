@@ -29,17 +29,11 @@ if ( $USER->instructor ) {
 
             <div class="col-sm-offset-1 col-sm-8">
                 <div class="form-group">
-                    <label class="control-label" for="CourseName">Course Name</label>
-                    <p class="form-control-staic">
-                        <?php echo($_SESSION["CourseName"]); ?>
-                        <input name="CourseName" id="CourseName" type="hidden" value="<?php echo($_SESSION["CourseName"]); ?>"/>
-                    </p>
-                </div>
-
-                <div class="form-group">
                     <label class="control-label" for="CardSetName">Card Set Title</label>
                     <input id="CardSetName" name="CardSetName" class="form-control" required/>
                 </div>
+
+                <input name="CourseName" id="CourseName" type="hidden" value="<?php echo($_SESSION["CourseName"]); ?>"/>
 
                 <input class="btn btn-primary" type="submit" value="Add Flashcard Set" />
             </div>

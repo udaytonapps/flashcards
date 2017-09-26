@@ -4,6 +4,10 @@ echo('<h2>Card Sets</h2>');
 
 $rows = $PDOX->allRowsDie("select * from {$p}flashcards_set where CourseName='".$_SESSION["CourseName"]."' order by CardSetName;'");
 
+if (count($rows) == 0) {
+    echo('<p><em>You currently do not have any card sets in this site. Create a new card set or use the import button below to copy a card set from another site.</em></p>');
+}
+
 echo('<div class="row">');
 
     foreach ( $rows as $row ) {
@@ -86,46 +90,53 @@ echo('<div class="row">');
 
 echo('</div>');
 
+/* Import from site */
 
-//--------------------------------------------------------------MY Flashcards-------------------------------------------//
+$courses = $PDOX->allRowsDie("SELECT DISTINCT CourseName FROM {$p}flashcards_set where UserName='".$_SESSION["UserName"]."' AND CourseName !='".$_SESSION["CourseName"]."' AND Visible=1");
 
-$rows2 = $PDOX->allRowsDie("SELECT DISTINCT CourseName FROM flashcards_set where UserName='".$_SESSION["UserName"]."' AND CourseName !='".$_SESSION["CourseName"]."' AND Visible=1");
+echo('
+    
+    <h3><button class="btn btn-primary" data-toggle="collapse" data-target="#import-cards-row">Import Card Set</button></h3>
+    
+    <div id="import-cards-row" class="row collapse">
+');
 
-echo "<h3>My Card Sets</h3><br>";
-echo "<table class='table table-bordered'  cellpadding='10' style='width:800px;'>";
-    echo "<tr><th> Course Name </th><th> Title</th></tr>";
+foreach ( $courses as $course ) {
 
-    foreach ( $rows2 as $row ) {
+    $sets = $PDOX->allRowsDie("SELECT CardSetName, SetID FROM {$p}flashcards_set where CourseName='" . $course['CourseName'] . "' order by CardSetName");
 
+    echo('<div id="card-set-list" class="list-group col-md-4">');
 
-    echo "<tr><td width='200'><b>";
-                echo $row['CourseName'];
+    echo('<h4>'.$course["CourseName"].'</h4>');
 
+    foreach ($sets as $set) {
 
+        $cards2 = $PDOX->allRowsDie("select * from {$p}flashcards where SetID=" . $set["SetID"]);
 
-                $rows0 = $PDOX->allRowsDie("SELECT CardSetName, SetID FROM flashcards_set where CourseName='".$row['CourseName']."'");
+        if (count($cards2) > 0) {
+            $countLabel = 'success';
+            $textLabel = 'success';
+        } else {
+            $countLabel = 'default';
+            $textLabel = 'muted';
+        }
 
-                echo "</b></td><td>
-
-
-            <table style='width:600px;' class='table table-bordered'>
-                ";
-                foreach ( $rows0 as $row ) {
-
-
-                echo "<tr><td><a style='min-width:200px;' href='list.php?SetID=".$row['SetID']."'>   ".$row["CardSetName"]."</a>";
-                        echo "<a class='btn btn-primary' style='float:right;' href='copy1.php?SetID=".$row['SetID']."'  onclick= 'return ConfirmCopy();'>  Copy to this course</a></td></tr>";
-                }
-
-                echo "</table>
-
-
-        </td></tr>";
-
-
-
+        echo('
+            <a href="copy1.php?SetID='.$set["SetID"].'"  onclick="return ConfirmCopyCardSet();" class="list-group-item">
+                <div class="list-group-item-heading">
+                    <span class="label label-'.$countLabel.' pull-right">'.count($cards2).' Cards</span>
+                    <span class="fa-stack small text-'.$textLabel.'">
+                        <span class="fa fa-square fa-stack-2x" style="top:-6px;"></span>
+                        <span class="fa fa-square-o fa-stack-2x" style="top:2px;left:-8px;"></span>
+                        <span class="fa fa-inverse fa-upload fa-stack-1x" style="top:-6px;"></span>
+                    </span>
+                    <h5 class="card-set-list-name text-'.$textLabel.'">'.$set["CardSetName"].'</h5>                    
+                </div>
+            </a>
+        ');
     }
 
+    echo('</div>');
+}
 
-    echo("</table><br><br>");
-
+    echo('</div>');

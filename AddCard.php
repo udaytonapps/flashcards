@@ -45,11 +45,6 @@ if ( $USER->instructor ) {
 
             <div class="col-sm-offset-1 col-sm-8">
                 <div class="form-group">
-                    <label class="control-label" for="SideA">Side A</label>
-                    <textarea class="form-control" name="SideA" id="SideA" rows="5" autofocus required></textarea>
-                </div>
-
-                <div class="form-group">
                     <label class="control-label" for="TypeA">Side A Type</label>
                     <select class="form-control" id="TypeA" name="TypeA">
                         <option value="Text" selected>Text</option>
@@ -60,8 +55,8 @@ if ( $USER->instructor ) {
                 </div>
 
                 <div class="form-group">
-                    <label class="control-label" for="SideB">Side B</label>
-                    <textarea class="form-control" name="SideB" id="SideB" rows="5" required></textarea>
+                    <label class="control-label" for="SideA">Side A</label>
+                    <textarea class="form-control" name="SideA" id="SideA" rows="5" autofocus required></textarea>
                 </div>
 
                 <div class="form-group">
@@ -70,6 +65,11 @@ if ( $USER->instructor ) {
                         <option value="Text" selected>Text</option>
                         <option value="Image">Image</option>
                     </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label" for="SideB">Side B</label>
+                    <textarea class="form-control" name="SideB" id="SideB" rows="5" required></textarea>
                 </div>
 
                 <input type="hidden" name="SetID" value="<?php echo $_GET["SetID"];?>"/>

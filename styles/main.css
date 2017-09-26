@@ -8,6 +8,9 @@ a.disabled, a.disabled:hover {
     opacity: .65;
     box-shadow: none;
 }
+.navbar {
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+}
 .navbar-header {
     padding-right: 16px;
     padding-left: 16px;
@@ -39,6 +42,14 @@ span.menu-with-icon {
 }
 .panel-body a:hover {
     text-decoration: none;
+}
+#import-cards-row {
+    border: 1px solid #E0E0E0;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+    padding: 8px;
+}
+h5.card-set-list-name {
+    display: inline-block;
 }
 .cards-pile {
     position: relative;
@@ -82,4 +93,61 @@ h3.card-order a {
 }
 p.addCard {
     margin: 0 0 10px 15px;
+}
+/* Student */
+.student-card-count {
+    font-size: 1em;
+}
+/* Play */
+#play-card-container .h4 {
+    padding-left: 12px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+#play-card-container .h3 {
+    padding-right: 12px;
+    padding-bottom: 12px;
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+div.play-menu {
+    margin-bottom: 1em;
+}
+div.play-card {
+    padding: 40px;
+    height: 400px;
+    line-height: 320px;
+    text-align: center;
+    margin-bottom: 1em;
+    box-shadow: 0.3125rem 0 1.25rem 0 rgba(0,0,0,0.28);
+}
+div.play-card span {
+    font-size: 24px;
+    display: inline-block;
+    vertical-align: middle;
+    line-height: normal;
+}
+div.prev-next a:hover {
+    text-decoration: none;
+}
+div.prev-next a:first-child {
+    margin-right: 90px;
+}
+div.play-card img {
+    max-height: 320px;
+}
+div.play-card .video-container {
+    position: relative;
+    width: 400px;
+    height: 0;
+    padding-bottom: 56.25%;
+}
+div.play-card .video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }

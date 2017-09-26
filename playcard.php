@@ -1,225 +1,138 @@
 <?php
 require_once "../config.php";
 
-// The Tsugi PHP API Documentation is available at:
-// http://do1.dr-chuck.com/tsugi/phpdoc/namespaces/Tsugi.html
-
-use \Tsugi\Core\Settings;
 use \Tsugi\Core\LTIX;
 
-// No parameter means we require CONTEXT, USER, and LINK
+// Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
-// Model
 $p = $CFG->dbprefix;
-$old_code = Settings::linkGet('code', '');
 
-
-
-// View
 $OUTPUT->header();
+
+include("tool-header.html");
+
 $OUTPUT->bodyStart();
 
+if ($_GET["Shuffle"] == 1) {
 
-$SetID = $_GET["SetID"];
+}
+
+
 $CardNum = $_GET["CardNum"];
+$_SESSION["CardNum"] = $CardNum;
+$Next = $CardNum + 1;
+$Prev = $CardNum - 1;
 $Flag = $_GET["Flag"];
 $UserName = $_SESSION["UserName"];
 $FullName = $_SESSION["FullName"];
 $Total=0;
 
-
-include("menu.php");
-
-?>
-    <style>
-
-        .holder{
-            width: 600px;
-            height:400px;
-            position:relative;
-        }
-
-        .bar{
-            position:absolute;
-
-            left:0;
-            width:600px;
-            height:190px;
-            font-size:25px;
-            margin-top:100px;
-
-
-
-
-        }
-
-
-    </style>
-
-    <span style="padding-left:30px;"></span><a class='btn btn-primary' href="shuffle0.php?SetID=<?php echo $SetID;?>">Shuffle Cards</a>
-    <br><br>
-
-    <link href="styles/FlashCards.css" rel="stylesheet">
-
-<?php
-
-
-
-
-//mysql_query("update FlashCard_Activity set Viewed=0 where UserName='".$_SESSION['UserName']."' and SetID=".$SetID);
-
-
-
-$rows0 = $PDOX->allRowsDie("SELECT * FROM flashcards where SetID=".$SetID);
-foreach ( $rows0 as $row ) {
-    $Total++;
+if ( $USER->instructor ) {
+    include("menu.php");
+} else {
+    echo('
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.php">Flashcards</a>
+            </div>
+        </div>
+    </nav>
+    ');
 }
 
+$setId = $_GET["SetID"];
+$_SESSION["SetID"] = $setId;
 
-?>
+$cardsInSet = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$setId." order by CardNum;");
 
+$set = $PDOX->rowDie("select * from {$p}flashcards_set where SetID=".$setId.";");
 
+$Total = count($cardsInSet);
 
-    <center>
-        <p style="height:100px;"></p>
+$percentComplete = $CardNum / $Total * 100;
 
-        <?php
-        $rows = $PDOX->allRowsDie("SELECT * FROM flashcards where SetID=".$SetID." AND CardNum=".$CardNum);
+    echo('
+        <ul class="breadcrumb">
+            <li><a href="index.php">All Card Sets</a></li>
+            <li>'.$set["CardSetName"].'</li>
+        </ul>
+        
+        <div class="row cardRow">
+            <div class="col-sm-3 play-menu">
+                <h3>'.$set["CardSetName"].'</h3>
+                <span>Progress <strong>'.$CardNum.'/'.$Total.'</strong></span>
+                <div class="progress">
+                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="'.$percentComplete.'" aria-valuemin="0" aria-valuemax="100" style="width:'.$percentComplete.'%">
+                        <span class="sr-only">'.$percentComplete.'% Complete</span>
+                    </div>
+                </div>
+                <a class="btn btn-primary" href="playcard.php?SetID='.$set["SetID"].'&Flag=A&Shuffle=1"><span class="fa fa-random"></span> Shuffle Cards</a>            
+            </div>
+            <div class="col-sm-9">    
+    ');
 
-        foreach ( $rows as $row ) {
+    $theCard = $PDOX->rowDie("SELECT * FROM {$p}flashcards where SetID=".$setId." AND CardNum=".$CardNum.";");
 
-
-            if ($Flag =="A"){
-                ?>
-                <a href="playcard.php?SetID=<?php echo $SetID;?>&CardNum=<?php echo $CardNum;?>&Flag=B" >
-
-                    <table  align="center"  class="SideA">
-                        <tr >
-                            <td style="text-decoration: none;scroll:auto;"><?php
-
-                                if($row["TypeA"] == "Image"){echo "<img src='".$row["SideA"]."'  style='width:580px;height:370px;'   >";}
-                                else if($row["TypeA"] == "mp3"){echo "<audio controls autoplay><source src='".$row["SideA"]."' type='audio/mpeg'>Your browser does not support the audio element.</audio>";}
-                                else if($row["TypeA"] == "Video"){
-                                    $Warpwire = $row["SideA"];
-
-                                    if (strpos($Warpwire, 'youtube') == true) {
-                                        if (strpos($Warpwire, 'embed') == false) {
-                                            $Youtube =  $row["SideA"];
-                                            $Code = explode("=", $Youtube);
-                                            //echo $Code[1]; // piece2
-                                            $Warpwire = "https://www.youtube.com/embed/".$Code[1]."?autoplay=1";
-                                        }
-                                    }
-
-
-                                    echo "<div class='holder'>";
-                                    echo "<iframe src='".$Warpwire."' frameborder='0' style='width:500px;height:330px;float:left;margin-left:50px; margin-top:10px;'></iframe> ";
-                                    echo "<div class='bar' ></div></div>";
-
+    echo('
+        <div id="play-card-container">
+            <div class="front">
+                <span class="h4 text-muted">Side A</span>
+                <div class="play-card text-center">
+                    <span>');
+                        if ($theCard["TypeA"] == "Image") {
+                            echo('<img src="'.$theCard["SideA"].'">');
+                        } else if ($theCard["TypeA"] == "mp3") {
+                            echo('<audio controls><source src="'.$theCard["SideA"].'" type="audio/mpeg">Your browser does not support the audio element.</audio>');
+                        } else if ($theCard["TypeA"] == "Video") {
+                            $URL = $theCard["SideA"];
+                            if (strpos($URL, 'youtube') == true) {
+                                if (strpos($URL, 'embed') == false) {
+                                    $Youtube = $theCard["SideA"];
+                                    $Code = explode("=", $Youtube);
+                                    $URL = "https://www.youtube.com/embed/".$Code[1];
                                 }
-                                else {echo $row["SideA"];}
+                            }
+                            echo ('<div class="video-container"><iframe src="'.$URL.'" class="video" frameborder="0"></iframe></div>');
+                        } else {
+                            echo($theCard["SideA"]);
+                        }
+                    echo('</span>
+                </div>
+                <span class="h3 text-muted"><span class="fa fa-undo"></span> Click to flip</span>
+            </div>
+            <div class="back">
+                <span class="h4 text-muted">Side B</span>
+                <div class="play-card text-center">
+                    <span>');
+                        if ($theCard["TypeB"] == "Image") {
+                            echo('<img src="'.$theCard["SideB"].'">');
+                        } else {
+                            echo($theCard["SideB"]);
+                        }
+                    echo('</span></div>
+                <span class="h3 text-muted"><span class="fa fa-undo"></span> Click to flip</span>
+            </div>                    
+        </div>
+        
+        <input type="hidden" id="sess" value="'.$_GET["PHPSESSID"].'">
+        
+        <div class="prev-next text-center">
+            <a href="playcard.php?SetID='.$setId.'&CardNum='.$Prev.'&Flag=A" ');if($Prev == 0){echo('class="disabled"');} echo('>
+                <span class="fa fa-3x fa-chevron-circle-left"></span>
+            </a>
+            <a href="playcard.php?SetID='.$setId.'&CardNum='.$Next.'&Flag=A" ');if($Next > $Total){echo('class="disabled"');} echo('>
+                <span class="fa fa-3x fa-chevron-circle-right"></span>
+            </a>
+        </div>
+    ');
 
-                                ?></td>
-                        </tr>
-                    </table>
+$OUTPUT->footerStart();
 
-                </a>
+include("tool-footer.html");
 
+echo('<script src="scripts/jquery.flip.min.js" type="text/javascript"></script>');
+echo('<script src="scripts/cardflipper.js" type="text/javascript"></script>');
 
-                <?php
-            }// end of Side A
-
-
-
-            if($Flag =="B"){
-
-
-                $PDOX->queryDie("INSERT INTO flashcards_activity (SetID, CardNum, UserName, FullName) VALUES ( $SetID, $CardNum, '$UserName', '$FullName' )",
-                    array(':SetID' => $SetID, ':CardNum' => $CardNum, ':UserName' => $UserName,':FullName' => $FullName)  );
-
-
-                ?>
-
-                <a href="playcard.php?SetID=<?php echo $SetID;?>&CardNum=<?php echo $CardNum;?>&Flag=A" >
-
-                    <table align="center" class="SideB">
-                        <tr><td style="text-decoration: none;scroll:auto;">
-
-                                <?php
-
-                                if($row["TypeB"] == "Image"){echo "<img src='".$row["SideB"]."'  style='width:580px;height:370px;'   >";}
-                                else{echo $row["SideB"];}
-
-                                ?>
-
-                            </td></tr>
-
-                    </table>
-                </a>
-
-                <?php
-            }// end if (side B)
-
-        }// end of loop
-
-        ?>
-    </center>
-
-
-    <div class="center">
-
-        <?php
-
-
-        if ($Total != 0){ // if total
-
-            $Next = $CardNum + 1;
-            $Prev = $CardNum - 1;
-
-
-
-
-            if ($Prev != 0) { ?>
-
-                <a href="playcard.php?SetID=<?php echo $SetID;?>&CardNum=<?php echo $Prev;?>&Flag=A" >
-
-                    <img style="opacity:0.4; z-index:10; float:left;  height:50px; margin-top:-5px;"  src="images/Prev.png" /></a>
-
-            <?php }else{
-                echo "<img style='float:left; opacity:0;  height:50px; margin-top:-5px;' src='images/Blank.png' />";
-            }
-            ?>
-
-
-
-
-
-            <span style='font-weight:bold;color:black;'><?php echo $CardNum."/".$Total; ?></span>
-
-
-
-
-
-            <?php if ($Next < ($Total + 1)) { ?>
-
-                <a href="playcard.php?SetID=<?php echo $SetID; ?>&CardNum=<?php echo $Next;?>&Flag=A">
-
-                    <img style="float:right;  opacity:0.4;  z-index:10; height:50px; margin-top:-5px; margin-left:15px;"  src="images/Next.png" /></a>
-
-            <?php }else{
-                echo "<img style='float:right;  opacity:0;  z-index:10; height:50px; margin-top:-5px; margin-left:15px;' src='images/Blank.png' />";
-            }
-
-
-        } // if total
-        ?>
-
-
-
-    </div>
-
-
-
-<?php
-$OUTPUT->footer();
+$OUTPUT->footerEnd();

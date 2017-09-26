@@ -1,54 +1,42 @@
 <?php
 require_once "../config.php";
 
-use \Tsugi\Core\Settings;
 use \Tsugi\Core\LTIX;
 
-// No parameter means we require CONTEXT, USER, and LINK
+// Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
-// View
-$OUTPUT->header();
-$OUTPUT->bodyStart();
+$p = $CFG->dbprefix;
 
 if ( $USER->instructor ) {
-
-    include("menu.php");
 
     $SetID1 = $_GET["SetID"];
     $UserName = $_SESSION["UserName"];
     $CourseName = $_SESSION["CourseName"];
     $Total3=0;
 
+    $oCardSet = $PDOX->rowDie("SELECT * FROM {$p}flashcards_set where SetID=".$SetID1.";");
 
-    $rows1 = $PDOX->allRowsDie("SELECT * FROM flashcards_set where SetID=".$SetID1);
-    foreach ( $rows1 as $row ) {
-        $CardSetName = $row["CardSetName"];
+    $CardSetName = $oCardSet["CardSetName"];
 
-    }
-
-    $PDOX->queryDie("INSERT INTO flashcards_set (UserName,CourseName, CardSetName) VALUES ( '$UserName','$CourseName', '$CardSetName' )",
+    $PDOX->queryDie("INSERT INTO {$p}flashcards_set (UserName,CourseName, CardSetName) VALUES ( '$UserName','$CourseName', '$CardSetName' );",
         array(':UserName' => $UserName,':CourseName' => $CourseName,':CardSetName' => $CardSetName)  );
 
 
     // for new SetID
 
-    $rows2 = $PDOX->allRowsDie("SELECT * FROM flashcards_set where CourseName='".$CourseName."' AND CardSetName='".$CardSetName."'");
+    $rows2 = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards_set where CourseName='".$CourseName."' AND CardSetName='".$CardSetName."';");
     foreach ( $rows2 as $row ) {
         $SetID2 = $row["SetID"];
     }
 
-//echo "Original SetID=".$SetID1."<br>";
-//echo "New SetID=".$SetID2;
-
-
-// get flashcard
+    // get flashcard
 
     $CardSetA = array();
     $CardSetB = array();
     $CardNumSet=array();
 
-    $rows3 = $PDOX->allRowsDie("SELECT * FROM flashcards where SetID=".$SetID1);
+    $rows3 = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$SetID1.";");
     foreach ( $rows3 as $row ) {
         $Total3++;
         array_push($CardSetA, $row["SideA"]);
@@ -56,33 +44,10 @@ if ( $USER->instructor ) {
         array_push($CardNumSet, $row["CardNum"]);
     }
 
-
-
     for ($x = 0; $x < $Total3; $x++) {
-        //echo $CardNumSet[$x].". ";
-        //echo $CardSetA[$x]." = ";
-        //echo $CardSetA[$x]."<br>";
+        $PDOX->queryDie("INSERT INTO {$p}flashcards (SetID, CardNum, SideA, SideB) VALUES ( $SetID2, $CardNumSet[$x], '$CardSetA[$x]', '$CardSetB[$x]' )",
+            array(':SetID' => $SetID2, ':CardNum' => $CardNum, ':SideA' => $SideA, ':SideB' => $SideB));
+    }
 
-
-
-        $PDOX->queryDie("INSERT INTO flashcards (SetID, CardNum, SideA, SideB) VALUES ( $SetID2, $CardNumSet[$x], '$CardSetA[$x]', '$CardSetB[$x]' )",
-            array(':SetID' => $SetID2, ':CardNum' => $CardNum, ':SideA' => $SideA,':SideB' => $SideB)  );
-
-    }// for loop
-
-
-
-    ?>
-
-
-
-    <?php
-
-
-    $_SESSION['success'] = __('New Cardset has been copied!');
     header( 'Location: '.addSession('index.php') ) ;
-
-
-}// for instructor
-
-$OUTPUT->footer();
+}

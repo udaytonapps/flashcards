@@ -1,17 +1,62 @@
 <?php
 
+echo('
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="index.php">Flashcards</a>
+            </div>
+        </div>
+    </nav>
+');
 
-$rows = $PDOX->allRowsDie("SELECT * FROM flashcards_set where CourseName='".$_SESSION["CourseName"]."' AND Active=1 AND Visible=1");
-echo "<h3>Welcome, ".$_SESSION["FullName"]."</h3><br>";
-echo "<table class='table table-bordered table-hover'  width='600' cellpadding='10'";
-echo "<tr><th>Flashcards</th><th>  </th><th></th></tr>";
+$visibleSets = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards_set where CourseName='".$_SESSION["CourseName"]."' AND Active=1 AND Visible=1;");
 
-foreach ( $rows as $row ) {
-    echo "<tr>";
-    echo "<td>".$row["CardSetName"]."</td>";
-    echo "<td> <a href='playcard.php?SetID=".$row["SetID"]."&CardNum=1&Flag=A'>Study</a></td>";
-    echo "<td> <a href='start.php?SetID=".$row["SetID"]."&CardNum=1&Flag=A'>Review</a></td>";
+echo('<h3>Welcome, '.$_SESSION["FullName"].'</h3>');
 
-    echo "</tr>\n";
+if (count($visibleSets) == 0) {
+    echo('<p><em>There are currently no available flashcard sets for this course.</em></p>');
+} else {
+
+    echo('<div class="row">');
+
+    foreach ( $visibleSets as $set ) {
+        $cards = $PDOX->allRowsDie("select * from {$p}flashcards where SetID=".$set["SetID"].";");
+        if (count($cards) > 0) {
+            $cardsPile = ' cards-pile';
+        } else {
+            $cardsPile = '';
+        }
+        echo('
+            <div class="col-sm-4">
+                <div class="panel panel-default'.$cardsPile.'">
+                    <div class="panel-heading">
+                        <span class="label label-success pull-right student-card-count">'.count($cards).' Cards</span>
+                        <h3>'.$set["CardSetName"].'</h3>
+                    </div>
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-xs-6 text-center" style="border-right: 1px solid #ccc;">
+                                <a href="playcard.php?SetID='.$set["SetID"].'&CardNum=1&Flag=A"');if(count($cards) == 0){echo(' class="disabled"');}echo('>
+                                    <span class="fa fa-2x fa-th-large"></span>
+                                    <br />
+                                    <small>Study</small>
+                                </a>
+                            </div>
+                            <div class="col-xs-6 text-center">
+                                <a href="start.php?SetID='.$set["SetID"].'&CardNum=1&Flag=A"');if(count($cards) < 5){echo(' class="disabled"');}echo('>
+                                    <span class="fa fa-2x fa-check-square-o"></span>
+                                    <br />
+                                    <small>Review</small>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        ');
+    }
+
+    echo('</div>');
 }
-echo("</table>\n");
+
