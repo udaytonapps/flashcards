@@ -96,7 +96,11 @@ $courses = $PDOX->allRowsDie("SELECT DISTINCT CourseName FROM {$p}flashcards_set
 
 echo('
     
-    <h3><button class="btn btn-primary" data-toggle="collapse" data-target="#import-cards-row">Import Card Set</button></h3>
+    <h3><button class="btn btn-primary ');
+            if(count($courses)==0) {
+                echo('disabled');
+            }
+    echo('" data-toggle="collapse" data-target="#import-cards-row">Import Card Set</button></h3>
     
     <div id="import-cards-row" class="row collapse">
 ');
