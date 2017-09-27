@@ -26,7 +26,7 @@ if ( $USER->instructor ) {
     if ($hasRosters) {
         $rosterg = $GLOBALS['ROSTER'];
 
-        $rosterData = $rosterg["data"];
+        $rosterData = $rosterg->data;
         foreach($rosterData["user_id"] as $test) {
             echo($test.'<br>');
         }
