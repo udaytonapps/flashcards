@@ -83,7 +83,8 @@ if ($CardNum == 0) {
                 </div>
                 <a class="btn btn-primary" href="shuffle.php?SetID='.$set["SetID"].'"><span class="fa fa-random"></span> Shuffle Cards</a>            
             </div>
-            <div class="col-sm-9">    
+            <!-- Hide column until loaded to fix SideB flicker -->
+            <div class="col-sm-9" id="play-card-column" style="display: none;">    
                 <div id="play-card-container">
                     <div class="front">
                         <span class="h4 text-muted">Side A</span>

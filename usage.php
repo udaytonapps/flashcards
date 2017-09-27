@@ -1,27 +1,44 @@
 <?php
 require_once "../config.php";
-use \Tsugi\Core\Settings;
+
 use \Tsugi\Core\LTIX;
+
+// Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
-// Model
+
 $p = $CFG->dbprefix;
 
-
-// View
 $OUTPUT->header();
+
+
+
+include("tool-header.html");
+
 $OUTPUT->bodyStart();
 
-include("menu.php");
-echo "<br><br>";
+if ( $USER->instructor ) {
+
+    include("menu.php");
+
+    $hasRosters = LTIX::populateRoster(true);
+
+    if ($hasRosters) {
+        $rosterg = $GLOBALS['ROSTER'];
+
+        $rosterData = $rosterg["data"];
+        foreach($rosterData["user_id"] as $test) {
+            echo($test.'<br>');
+        }
+    }
 
 
-$Page = $_GET["Page"];
+
 $SetID = $_GET["SetID"];
 $CardSetName = $_GET["CardSetName"];
 $Total=0;
 
-if($Page == 1 || $Page < 1){
+/*if($Page == 1 || $Page < 1){
     $SQL0="SELECT * FROM flashcards where SetID=".$SetID." AND CardNum < 21";
     $Offset = 0;
     $Page = 1;
@@ -80,7 +97,6 @@ foreach ( $rows0 as $row ) {
 }
 
 //echo $Total;
-if ( $USER->instructor ) {
 
 
     $rows = $PDOX->allRowsDie("SELECT DISTINCT FullName FROM flashcards_activity where SetID=".$SetID);
@@ -141,16 +157,16 @@ if ( $USER->instructor ) {
 
         echo "</tr>\n";
     }
-    echo("</table></div>");
+    echo("</table></div>"); */
 
 
+} else {
+    // student so send back to index
+    header( 'Location: '.addSession('index.php') ) ;
 }
-else{
-    // student area
 
-}
+$OUTPUT->footerStart();
 
+include("tool-footer.html");
 
-$OUTPUT->footer();
-
-
+$OUTPUT->footerEnd();

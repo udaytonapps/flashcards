@@ -13,4 +13,6 @@ $(document).ready(function() {
             }
         });
     });
+    // Needed to fix SideB flicker
+    $('#play-card-column').show();
 });
