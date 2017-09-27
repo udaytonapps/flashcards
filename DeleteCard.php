@@ -15,10 +15,9 @@ if ( $USER->instructor ) {
 
     $PDOX->queryDie("DELETE FROM {$p}flashcards where CardID=".$CardID.";");
 
-    $CardNum = 0;
-
     $remainingCards = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$_GET["SetID"]." order by CardNum;");
 
+    $CardNum = 0;
     foreach ( $remainingCards as $card ) {
         $CardNum++;
         $PDOX->queryDie("update {$p}flashcards set CardNum=".$CardNum." where CardID=".$card["CardID"].";");

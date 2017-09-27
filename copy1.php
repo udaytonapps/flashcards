@@ -32,21 +32,25 @@ if ( $USER->instructor ) {
 
     // get flashcard
 
-    $CardSetA = array();
-    $CardSetB = array();
+    $CardSideA = array();
+    $CardSideB = array();
+    $CardTypeA = array();
+    $CardTypeB = array();
     $CardNumSet=array();
 
     $rows3 = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$SetID1.";");
     foreach ( $rows3 as $row ) {
         $Total3++;
-        array_push($CardSetA, $row["SideA"]);
-        array_push($CardSetB, $row["SideB"]);
+        array_push($CardSideA, $row["SideA"]);
+        array_push($CardSideB, $row["SideB"]);
+        array_push($CardTypeA, $row["TypeA"]);
+        array_push($CardTypeB, $row["TypeB"]);
         array_push($CardNumSet, $row["CardNum"]);
     }
 
     for ($x = 0; $x < $Total3; $x++) {
-        $PDOX->queryDie("INSERT INTO {$p}flashcards (SetID, CardNum, SideA, SideB) VALUES ( $SetID2, $CardNumSet[$x], '$CardSetA[$x]', '$CardSetB[$x]' )",
-            array(':SetID' => $SetID2, ':CardNum' => $CardNum, ':SideA' => $SideA, ':SideB' => $SideB));
+        $PDOX->queryDie("INSERT INTO {$p}flashcards (SetID, CardNum, SideA, SideB, TypeA, TypeB) VALUES ( $SetID2, $CardNumSet[$x], '$CardSideA[$x]', '$CardSideB[$x]', '$CardTypeA[$x]', '$CardTypeB[$x]' )",
+            array(':SetID' => $SetID2, ':CardNum' => $CardNum, ':SideA' => $SideA, ':SideB' => $SideB, ':TypeA' => $TypeA, ':TypeB' => $TypeB));
     }
 
     header( 'Location: '.addSession('index.php') ) ;

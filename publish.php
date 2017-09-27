@@ -3,10 +3,9 @@ require_once "../config.php";
 
 use \Tsugi\Core\LTIX;
 
+// Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
-
-// Model
 $p = $CFG->dbprefix;
 
 $SetID=$_GET["SetID"];
@@ -18,8 +17,5 @@ if ( $USER->instructor ) {
 
     header( 'Location: '.addSession('index.php') ) ;
 }
-
-
-$OUTPUT->footer();
 
 

@@ -20,5 +20,7 @@ if ( $USER->instructor ) {
     $PDOX->queryDie("INSERT INTO {$p}flashcards_set (UserName, CourseName, CardSetName) VALUES ( '$UserName', '$CourseName', '$CardSetName')",
         array(':UserName' => $UserName, ':CourseName' => $CourseName, ':CardSetName' => $CardSetName)  );
 
-    header( 'Location: '.addSession('index.php') ) ;
+    $newSet = $PDOX->rowDie("SELECT SetID FROM {$p}flashcards_set WHERE UserName = '$UserName' AND CourseName = '$CourseName' AND CardSetName = '$CardSetName';");
+
+    header( 'Location: '.addSession('list.php?SetID='.$newSet["SetID"]) ) ;
 }

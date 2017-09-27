@@ -17,7 +17,7 @@ $TotalCards = 0;
 
 $NewCardNum = array(); // temp for CardNum2
 
-$allCards = $PDOX->allRowsDie("SELECT CardNum, CardID FROM flashcards where SetID=".$SetID.";");
+$allCards = $PDOX->allRowsDie("SELECT CardNum, CardID FROM {$p}flashcards where SetID=".$SetID.";");
 
 foreach ( $allCards as $card ) {
     $TotalCards++;
