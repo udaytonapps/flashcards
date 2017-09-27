@@ -21,15 +21,13 @@ if ( $USER->instructor ) {
 
     include("menu.php");
 
-    $hasRosters = LTIX::populateRoster(true);
+    $hasRosters = LTIX::populateRoster(false);
 
     if ($hasRosters) {
         $rosterData = $GLOBALS['ROSTER']->data;
-        var_dump($rosterData);
-        /*
-        foreach($rosterData["user_id"] as $test) {
-            echo($test.'<br>');
-        }*/
+        foreach($rosterData as $test) {
+            echo($test["person_name_full"].' ('.$test["person_contact_email_primary"].')<br>');
+        }
     }
 
 
