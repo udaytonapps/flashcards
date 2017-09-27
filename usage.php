@@ -24,12 +24,12 @@ if ( $USER->instructor ) {
     $hasRosters = LTIX::populateRoster(true);
 
     if ($hasRosters) {
-        $rosterg = $GLOBALS['ROSTER'];
-
-        $rosterData = $rosterg->data;
+        $rosterData = $GLOBALS['ROSTER']->data;
+        var_dump($rosterData);
+        /*
         foreach($rosterData["user_id"] as $test) {
             echo($test.'<br>');
-        }
+        }*/
     }
 
 
