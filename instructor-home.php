@@ -67,7 +67,7 @@ echo('<div class="row">');
                                     </a>
                                 </div>
                                 <div class="col-xs-3 text-center">
-                                    <a href="usage.php?SetID='.$row["SetID"].'&CardSetName='.$row["CardSetName"].'" ');if(count($cards) == 0){echo('class="disabled"');}echo('>
+                                    <a href="usage.php?SetID='.$row["SetID"].'" ');if(count($cards) == 0){echo('class="disabled"');}echo('>
                                     <span class="fa fa-2x fa-bar-chart"></span>
                                     <br />
                                     <small>Usage</small>
