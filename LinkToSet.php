@@ -14,11 +14,15 @@ include("tool-header.html");
 
 $OUTPUT->bodyStart();
 
+$linkId = $LINK->id;
+
 if ( $USER->instructor ) {
 
     include("menu.php");
 
     $allSets = $PDOX->allRowsDie("select * from {$p}flashcards_set where CourseName='".$_SESSION["CourseName"]."' order by CardSetName;");
+
+    $previousLink = $PDOX->rowDie("SELECT * FROM {$p}flashcards_link WHERE link_id ='".$linkId."';");
 
     echo('<small>DEV: From Link '.$LINK->id.'</small>');
 
@@ -37,12 +41,19 @@ if ( $USER->instructor ) {
                     <select class="form-control" id="linkToSet" name="linkToSet">');
 
                         foreach($allSets as $set) {
-                            echo('<option value="'.$set["SetID"].'">'.$set["CardSetName"].'</option>');
+
+                            if(isset($previousLink["SetID"]) && $previousLink["SetID"] == $set["SetID"]) {
+                                echo('<option value="'.$set["SetID"].'" selected>'.$set["CardSetName"].'</option>');
+                            } else {
+                                echo('<option value="'.$set["SetID"].'">'.$set["CardSetName"].'</option>');
+                            }
+
                         }
 
                 echo('</select>
                 </div>
-                <input class="btn btn-primary" type="submit" value="Link to Flashcard Set" />
+                <input class="btn btn-primary" type="submit" value="Link to Flashcard Set" /> 
+                <a href="UnlinkFromSet_Submit.php" class="btn btn-danger">Unlink</a>
             </div>
         </div>
 
