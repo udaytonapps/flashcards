@@ -1,6 +1,15 @@
 <?php
 
-echo('<h2>Card Sets</h2>');
+echo('<h2>Card Sets');
+
+$linkId = $LINK->id;
+$shortcut = $PDOX->rowDie("SELECT SetId FROM {$p}flashcards_link WHERE link_id = '".$linkId."';");
+if (isset($shortcut["SetId"])) {
+    $shortcutSet = $PDOX->rowDie("SELECT * FROM {$p}flashcards_set WHERE SetID = '".$shortcut["SetId"]."';");
+    echo('<br /><small><span class="fa fa-link"></span> This instance of Flashcards is linked to <a href="playcard.php?SetID='.$shortcut["SetId"].'&CardNum=1&CardNum2=0&Flag=A">'.$shortcutSet["CardSetName"].'</a>.</small>');
+}
+
+echo('</h2>');
 
 $rows = $PDOX->allRowsDie("select * from {$p}flashcards_set where CourseName='".$_SESSION["CourseName"]."' order by CardSetName;'");
 

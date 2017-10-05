@@ -26,8 +26,13 @@ if ( $USER->instructor ) {
 
 }else{ // student
 
-    include("student-home.php");
-
+    $linkId = $LINK->id;
+    $shortcut = $PDOX->rowDie("SELECT SetId FROM {$p}flashcards_link WHERE link_id = '".$linkId."';");
+    if (isset($shortcut["SetId"])) {
+        header( 'Location: '.addSession('playcard.php?SetID='.$shortcut["SetId"].'&CardNum=1&CardNum2=0&Flag=A&Shortcut=1"') ) ;
+    } else {
+        include("student-home.php");
+    }
 }
 
 $OUTPUT->footerStart();

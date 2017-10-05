@@ -7,6 +7,7 @@ $menu = array(
                             <span class="fa fa-inverse fa-plus fa-stack-1x" style="top:-6px;"></span>
                          </span>
                          <span class="menu-with-icon">Create Card Set</span>',
+    'LinkToSet.php' => '<span class="fa fa-external-link"></span> Link To Card Set'
 );
 ?>
 

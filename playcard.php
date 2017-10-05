@@ -24,18 +24,27 @@ $UserName = $_SESSION["UserName"];
 $FullName = $_SESSION["FullName"];
 $Total=0;
 
+if(isset($_GET["Shortcut"])) {
+    $shortCut = $_GET["Shortcut"];
+} else {
+    $shortCut = 0;
+}
+
+
 if ( $USER->instructor ) {
     include("menu.php");
 } else {
-    echo('
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="index.php">Flashcards</a>
+    if ($shortCut == 0) {
+        echo('
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="index.php">Flashcards</a>
+                </div>
             </div>
-        </div>
-    </nav>
-    ');
+        </nav>
+        ');
+    }
 }
 
 $setId = $_GET["SetID"];
@@ -66,12 +75,16 @@ if ($CardNum == 0) {
     $onCard = $CardNum;
 }
 
+    if ($shortCut == 0) {
+        echo('
+            <ul class="breadcrumb">
+                <li><a href="index.php">All Card Sets</a></li>
+                <li>'.$set["CardSetName"].'</li>
+            </ul>
+        ');
+    }
+
     echo('
-        <ul class="breadcrumb">
-            <li><a href="index.php">All Card Sets</a></li>
-            <li>'.$set["CardSetName"].'</li>
-        </ul>
-        
         <div class="row cardRow">
             <div class="col-sm-3 play-menu">
                 <h3>'.$set["CardSetName"].'</h3>
@@ -81,7 +94,7 @@ if ($CardNum == 0) {
                         <span class="sr-only">'.$percentComplete.'% Complete</span>
                     </div>
                 </div>
-                <a class="btn btn-primary" href="shuffle.php?SetID='.$set["SetID"].'"><span class="fa fa-random"></span> Shuffle Cards</a>            
+                <a class="btn btn-primary" href="shuffle.php?SetID='.$set["SetID"].'&Shortcut='.$shortCut.'"><span class="fa fa-random"></span> Shuffle Cards</a>            
             </div>
             <!-- Hide column until loaded to fix SideB flicker -->
             <div class="col-sm-9" id="play-card-column" style="display: none;">    
@@ -128,10 +141,10 @@ if ($CardNum == 0) {
                 <input type="hidden" id="sess" value="'.$_GET["PHPSESSID"].'">
         
                 <div class="prev-next text-center">
-                    <a href="playcard.php?SetID='.$setId.'&CardNum='.$Prev.'&CardNum2='.$Prev2.'&Flag=A" ');if($Prev == 0 && $Prev2 == 0){echo('class="disabled"');} echo('>
+                    <a href="playcard.php?SetID='.$setId.'&CardNum='.$Prev.'&CardNum2='.$Prev2.'&Flag=A&Shortcut='.$shortCut.'" ');if($Prev == 0 && $Prev2 == 0){echo('class="disabled"');} echo('>
                         <span class="fa fa-3x fa-chevron-circle-left"></span>
                     </a>
-                    <a href="playcard.php?SetID='.$setId.'&CardNum='.$Next.'&CardNum2='.$Next2.'&Flag=A" ');if($Next > $Total || $Next2 > $Total){echo('class="disabled"');} echo('>
+                    <a href="playcard.php?SetID='.$setId.'&CardNum='.$Next.'&CardNum2='.$Next2.'&Flag=A&Shortcut='.$shortCut.'" ');if($Next > $Total || $Next2 > $Total){echo('class="disabled"');} echo('>
                         <span class="fa fa-3x fa-chevron-circle-right"></span>
                     </a>
                 </div>

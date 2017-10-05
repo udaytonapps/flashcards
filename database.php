@@ -29,16 +29,11 @@ $DATABASE_INSTALL = array(
     link_id     INTEGER NOT NULL,
     SetID       INTEGER NULL,
 
-    CONSTRAINT `{$CFG->dbprefix}flashcards_link_ibfk_1`
-        FOREIGN KEY (`link_id`)
-        REFERENCES `{$CFG->dbprefix}lti_link` (`link_id`)
-        ON DELETE CASCADE ON UPDATE CASCADE,
-        
     CONSTRAINT `{$CFG->dbprefix}flashcards_link_ibfk_2`
         FOREIGN KEY (`SetID`)
         REFERENCES `{$CFG->dbprefix}flashcards_set` (`SetID`)
         ON UPDATE CASCADE,
-
+        
     UNIQUE(link_id)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8"),
     array( "{$CFG->dbprefix}flashcards",

@@ -15,6 +15,12 @@ $FullName = $_SESSION["FullName"];
 
 $TotalCards = 0;
 
+if(isset($_GET["Shortcut"])) {
+    $shortCut = $_GET["Shortcut"];
+} else {
+    $shortCut = 0;
+}
+
 $NewCardNum = array(); // temp for CardNum2
 
 $allCards = $PDOX->allRowsDie("SELECT CardNum, CardID FROM {$p}flashcards where SetID=".$SetID.";");
@@ -38,4 +44,4 @@ for ($x = 1; $x <= $TotalCards; $x++) {
     $PDOX->queryDie("update {$p}flashcards set CardNum2=".$CardNum2." where CardNum=".$CardNum." AND SetID=".$SetID);
 }
 
-header( 'Location: '.addSession('playcard.php?CardNum=0&CardNum2=1&Flag=A&SetID='.$SetID) ) ;
+header( 'Location: '.addSession('playcard.php?CardNum=0&CardNum2=1&Flag=A&SetID='.$SetID.'&Shortcut='.$shortCut) ) ;
