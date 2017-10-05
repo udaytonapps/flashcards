@@ -40,7 +40,7 @@ if ( $USER->instructor ) {
                   </div>
               </div>');
 
-        echo('<div class="row"><div class="col-sm-4"><h4>Student Name</h4></div><div class="col-md-8"><h4>Progress</h4></div></div>');
+        echo('<div class="row"><div class="col-sm-4"><h4>Student Name</h4></div><div class="col-md-6"><h4>Progress</h4></div></div>');
 
         $rosterData = $GLOBALS['ROSTER']->data;
 
@@ -64,7 +64,7 @@ if ( $USER->instructor ) {
                     $progressClass = 'success';
                 }
 
-                echo('<div class="col-sm-8">
+                echo('<div class="col-sm-6">
                     <div class="progress">
                         <div class="progress-bar progress-bar-'.$progressClass.'" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:'.$percentComplete.'%">
                             '.$numberCompleted["Count"].' / '.$totalCards.' Cards Viewed

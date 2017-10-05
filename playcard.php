@@ -94,7 +94,18 @@ if ($CardNum == 0) {
                         <span class="sr-only">'.$percentComplete.'% Complete</span>
                     </div>
                 </div>
-                <a class="btn btn-primary" href="shuffle.php?SetID='.$set["SetID"].'&Shortcut='.$shortCut.'"><span class="fa fa-random"></span> Shuffle Cards</a>            
+                <p>
+                    <a class="btn btn-primary" href="shuffle.php?SetID='.$set["SetID"].'&Shortcut='.$shortCut.'"><span class="fa fa-random"></span> Shuffle Cards</a>                
+                </p>
+                <p>');
+
+                if(isset($_GET["ReviewMode"]) && $_GET["ReviewMode"] == 1) {
+                    echo('<a class="btn btn-success" href="playcard.php?SetID='.$set["SetID"].'&CardNum=1&CardNum2=0&Flag=A&ReviewMode=0"><span class="fa fa-check-square-o"></span> Review Mode</a>');
+                } else {
+                    echo('<a class="btn btn-default" href="playcard.php?SetID='.$set["SetID"].'&CardNum=1&CardNum2=0&Flag=A&ReviewMode=1"><span class="fa fa-square-o"></span> Review Mode</a>');
+                }
+
+                echo('</p>
             </div>
             <!-- Hide column until loaded to fix SideB flicker -->
             <div class="col-sm-9" id="play-card-column" style="display: none;">    

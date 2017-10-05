@@ -61,18 +61,11 @@ echo('<div class="row">');
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-xs-3 text-center">
+                                <div class="col-xs-6 text-center">
                                     <a href="playcard.php?SetID='.$row["SetID"].'&CardNum=1&CardNum2=0&Flag=A" ');if(count($cards) == 0){echo('class="disabled"');}echo('>
                                     <span class="fa fa-2x fa-th-large"></span>
                                     <br />
                                     <small>Flashcards</small>
-                                    </a>
-                                </div>
-                                <div class="col-xs-3 text-center" style="border-right: 1px solid #ccc;">
-                                    <a href="start.php?SetID='.$row["SetID"].'" ');if(count($cards) < 5){echo('class="disabled"');}echo('>
-                                    <span class="fa fa-2x fa-check-square-o"></span>
-                                    <br />
-                                    <small>Review</small>
                                     </a>
                                 </div>
                                 <div class="col-xs-3 text-center">

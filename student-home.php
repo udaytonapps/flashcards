@@ -36,18 +36,11 @@ if (count($visibleSets) == 0) {
                     </div>
                     <div class="panel-body">
                         <div class="row">
-                            <div class="col-xs-6 text-center" style="border-right: 1px solid #ccc;">
+                            <div class="col-xs-12 text-center">
                                 <a href="playcard.php?SetID='.$set["SetID"].'&CardNum=1&CardNum2=0&Flag=A"');if(count($cards) == 0){echo(' class="disabled"');}echo('>
                                     <span class="fa fa-2x fa-th-large"></span>
                                     <br />
-                                    <small>Study</small>
-                                </a>
-                            </div>
-                            <div class="col-xs-6 text-center">
-                                <a href="start.php?SetID='.$set["SetID"].'&CardNum=1&Flag=A"');if(count($cards) < 5){echo(' class="disabled"');}echo('>
-                                    <span class="fa fa-2x fa-check-square-o"></span>
-                                    <br />
-                                    <small>Review</small>
+                                    <small>Flashcards</small>
                                 </a>
                             </div>
                         </div>
