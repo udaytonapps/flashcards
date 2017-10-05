@@ -36,14 +36,32 @@ if ( $USER->instructor ) {
 
         usort($rosterData, "compareStudentsLastName");
 
-        $rowCounter = 2;
-        foreach($rosterData as $student) {
+        $columnIterator = $exportFile->getActiveSheet()->getColumnIterator();
+        $columnIterator->next();
 
-            $exportFile ->getActiveSheet()
-                            ->setCellValue('A'.$rowCounter, $student["person_name_family"].', '.$student["person_name_given"]);
+        for($x = 1; $x <= $totalCards; $x++) {
 
-            $rowCounter++;
+            $exportFile->getActiveSheet()->setCellValue($columnIterator->current()->getColumnIndex().'1', 'Card '.$x);
+
+            $rowCounter = 2;
+            foreach($rosterData as $student) {
+
+                $exportFile->getActiveSheet()
+                    ->setCellValue('A'.$rowCounter, $student["person_name_family"].', '.$student["person_name_given"]);
+
+                $completed = $PDOX->rowDie("SELECT count(*) as Count FROM {$p}flashcards_activity WHERE FullName = '".$student["person_name_full"]."' AND SetID = '".$setId."' AND CardNum = '".$x."';");
+
+                if($completed["Count"] == 1) {
+                    $exportFile->getActiveSheet()->setCellValue($columnIterator->current()->getColumnIndex().$rowCounter, 'X');
+                }
+
+                $rowCounter++;
+            }
+
+            $columnIterator->next();
         }
+
+
 
         $exportFile->getActiveSheet()->setTitle('Flashcards Activity');
 
