@@ -151,7 +151,3 @@ div.play-card .video {
     width: 100%;
     height: 100%;
 }
-#usage-table-container {
-    max-height: 600px;
-    overflow-y: auto;
-}

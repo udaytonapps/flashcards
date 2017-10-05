@@ -8,6 +8,11 @@ $LAUNCH = LTIX::requireData();
 
 $p = $CFG->dbprefix;
 
+// Comparator for student last name used for sorting roster
+function compareStudentsLastName($a, $b) {
+    return strcmp($a["person_name_family"], $b["person_name_family"]);
+}
+
 $OUTPUT->header();
 
 include("tool-header.html");
@@ -20,6 +25,8 @@ if ( $USER->instructor ) {
 
     $setId = $_GET["SetID"];
 
+    $set = $PDOX->rowDie("select * from {$p}flashcards_set where SetID=".$setId.";");
+
     $cardsInSet = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$setId.";");
     $totalCards = count($cardsInSet);
 
@@ -27,41 +34,45 @@ if ( $USER->instructor ) {
 
     if ($hasRosters) {
 
-        echo ('
-        <div id="usage-table-container">
-            <table class="table table-responsive table-bordered" id="usage-table">
-                <thead>
-                    <tr>
-                        <th>Student Name</th>
-        ');
-            for ($x = 1; $x <= $totalCards; $x++) {
-                echo('<th>Card '.$x.'</th>');
-            }
-        echo('
-                    </tr>
-                </thead>
-                <tbody>
-        ');
+        echo('<div class="row">
+                  <div class="col-sm-12">
+                      <h3><a href="exportActivity.php?SetID='.$setId.'" class="btn btn-link pull-right">Export Activity to Excel</a><span class="fa fa-bar-chart"></span> '.$set["CardSetName"].' Activity</h3>
+                  </div>
+              </div>');
+
+        echo('<div class="row"><div class="col-sm-4"><h4>Student Name</h4></div><div class="col-md-8"><h4>Progress</h4></div></div>');
+
         $rosterData = $GLOBALS['ROSTER']->data;
-        foreach($rosterData as $student) {
-            echo('<tr>
-                    <td>'.$student["person_name_family"].', '.$student["person_name_given"].'</td>');
 
-            for ($x = 1; $x <= $totalCards; $x++) {
-                $completed = $PDOX->rowDie("SELECT * FROM {$p}flashcards_activity WHERE FullName = '".$student["person_name_full"]."' AND SetID = '".$setId."' AND CardNum = '".$x."';");
-                if($completed) {
-                    echo('<td><span class="fa fa-check"></span></td>');
-                } else {
-                    echo('<td></td>');
-                }
+        usort($rosterData, "compareStudentsLastName");
+
+        foreach($rosterData as $student) {
+            echo('<div class="row">
+                    <div class="col-sm-4">'.$student["person_name_family"].', '.$student["person_name_given"].'</div>');
+
+            $numberCompleted = $PDOX->rowDie("SELECT count(distinct(CardNum)) as Count FROM {$p}flashcards_activity WHERE FullName = '".$student["person_name_full"]."' AND SetID = '".$setId."';");
+
+            $percentComplete = $numberCompleted["Count"] / $totalCards * 100;
+
+            if($percentComplete < 25) {
+                $progressClass = 'danger';
+            } else if ($percentComplete < 75) {
+                $progressClass = 'warning';
+            } else {
+                $progressClass = 'success';
             }
 
-            echo('</tr>');
+            echo('<div class="col-sm-8">
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-'.$progressClass.'" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:'.$percentComplete.'%">
+                            '.$numberCompleted["Count"].' / '.$totalCards.' Cards Viewed
+                        </div>
+                    </div>
+                  </div>
+                </div>
+            ');
         }
-        echo('</tbody>
-            </table>
-        </div>
-        ');
+
     }
 } else {
     // student so send back to index
@@ -71,15 +82,5 @@ if ( $USER->instructor ) {
 $OUTPUT->footerStart();
 
 include("tool-footer.html");
-
-echo('<script src="scripts/jquery.tablesorter.min.js" type="text/javascript"></script>
-            <script type="text/javascript">
-                $(document).ready(function() {
-                    $("#usage-table").tablesorter({
-                        sortList: [[0,0]]
-                    });
-                });
-            </script>
-');
 
 $OUTPUT->footerEnd();

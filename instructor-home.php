@@ -30,7 +30,7 @@ echo('<div class="row">');
                 $cardsPile = '';
             }
             echo('
-                <div class="col-md-4">
+                <div class="col-sm-4">
                     <div class="panel panel-'.$panelClass.$cardsPile.'">
                         <div class="panel-heading">
                             <a class="btn btn-'.$panelClass.' pull-right" href="publish.php?SetID='.$row["SetID"].'&Flag='.$flag.'">'.$pubAction.'</a>
