@@ -107,8 +107,8 @@ if ($CardNum == 0) {
 
                 echo('</p>
             </div>
-            <!-- Hide column until loaded to fix SideB flicker -->
-            <div class="col-sm-9" id="play-card-column" style="display: none;">    
+            
+            <div class="col-sm-9" id="play-card-column">    
                 <div id="play-card-container">
                     <div class="front">
                         <span class="h4 text-muted">Side A</span>
@@ -135,7 +135,7 @@ if ($CardNum == 0) {
                         </div>
                         <span class="h3 text-muted"><span class="fa fa-undo"></span> Click to flip</span>
                     </div>
-                    <div class="back">
+                    <div class="back" style="visibility: hidden;">
                         <span class="h4 text-muted">Side B</span>
                         <div class="play-card text-center">
                             <span>');
@@ -154,6 +154,9 @@ if ($CardNum == 0) {
                 <div class="prev-next text-center">
                     <a href="playcard.php?SetID='.$setId.'&CardNum='.$Prev.'&CardNum2='.$Prev2.'&Flag=A&Shortcut='.$shortCut.'" ');if($Prev == 0 && $Prev2 == 0){echo('class="disabled"');} echo('>
                         <span class="fa fa-3x fa-chevron-circle-left"></span>
+                    </a>
+                    <a href="javascript:void(0);" id="flip-link">
+                        <span class="fa fa-3x fa-undo"></span>
                     </a>
                     <a id="next-link" href="playcard.php?SetID='.$setId.'&CardNum='.$Next.'&CardNum2='.$Next2.'&Flag=A&Shortcut='.$shortCut.'" ');if($Next > $Total || $Next2 > $Total){echo('class="disabled"');} echo('>
                         <span class="fa fa-3x fa-chevron-circle-right"></span>

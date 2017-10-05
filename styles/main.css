@@ -129,11 +129,12 @@ div.play-card span {
     vertical-align: middle;
     line-height: normal;
 }
-div.prev-next a:hover {
+div.prev-next a:hover, div.prev-next a:focus, div.prev-next a:active {
     text-decoration: none;
 }
-div.prev-next a:first-child {
-    margin-right: 90px;
+#flip-link {
+    margin-right: 45px;
+    margin-left: 45px;
 }
 div.play-card img {
     max-height: 320px;
