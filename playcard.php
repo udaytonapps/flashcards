@@ -155,7 +155,7 @@ if ($CardNum == 0) {
                     <a href="playcard.php?SetID='.$setId.'&CardNum='.$Prev.'&CardNum2='.$Prev2.'&Flag=A&Shortcut='.$shortCut.'" ');if($Prev == 0 && $Prev2 == 0){echo('class="disabled"');} echo('>
                         <span class="fa fa-3x fa-chevron-circle-left"></span>
                     </a>
-                    <a href="playcard.php?SetID='.$setId.'&CardNum='.$Next.'&CardNum2='.$Next2.'&Flag=A&Shortcut='.$shortCut.'" ');if($Next > $Total || $Next2 > $Total){echo('class="disabled"');} echo('>
+                    <a id="next-link" href="playcard.php?SetID='.$setId.'&CardNum='.$Next.'&CardNum2='.$Next2.'&Flag=A&Shortcut='.$shortCut.'" ');if($Next > $Total || $Next2 > $Total){echo('class="disabled"');} echo('>
                         <span class="fa fa-3x fa-chevron-circle-right"></span>
                     </a>
                 </div>
