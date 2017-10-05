@@ -47,22 +47,24 @@ if ( $USER->instructor ) {
         usort($rosterData, "compareStudentsLastName");
 
         foreach($rosterData as $student) {
-            echo('<div class="row">
+            // Only want students
+            if ($student["role"] == 'Learner') {
+                echo('<div class="row">
                     <div class="col-sm-4">'.$student["person_name_family"].', '.$student["person_name_given"].'</div>');
 
-            $numberCompleted = $PDOX->rowDie("SELECT count(distinct(CardNum)) as Count FROM {$p}flashcards_activity WHERE FullName = '".$student["person_name_full"]."' AND SetID = '".$setId."';");
+                $numberCompleted = $PDOX->rowDie("SELECT count(distinct(CardNum)) as Count FROM {$p}flashcards_activity WHERE FullName = '".$student["person_name_full"]."' AND SetID = '".$setId."';");
 
-            $percentComplete = $numberCompleted["Count"] / $totalCards * 100;
+                $percentComplete = $numberCompleted["Count"] / $totalCards * 100;
 
-            if($percentComplete < 25) {
-                $progressClass = 'danger';
-            } else if ($percentComplete < 75) {
-                $progressClass = 'warning';
-            } else {
-                $progressClass = 'success';
-            }
+                if($percentComplete < 25) {
+                    $progressClass = 'danger';
+                } else if ($percentComplete < 75) {
+                    $progressClass = 'warning';
+                } else {
+                    $progressClass = 'success';
+                }
 
-            echo('<div class="col-sm-8">
+                echo('<div class="col-sm-8">
                     <div class="progress">
                         <div class="progress-bar progress-bar-'.$progressClass.'" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:'.$percentComplete.'%">
                             '.$numberCompleted["Count"].' / '.$totalCards.' Cards Viewed
@@ -71,6 +73,7 @@ if ( $USER->instructor ) {
                   </div>
                 </div>
             ');
+            }
         }
 
     }

@@ -1,8 +1,8 @@
 <?php
 require_once "../config.php";
+require_once "util/PHPExcel.php";
 
 use \Tsugi\Core\LTIX;
-require_once "util/PHPExcel.php";
 
 // Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
@@ -44,20 +44,23 @@ if ( $USER->instructor ) {
             $exportFile->getActiveSheet()->setCellValue($columnIterator->current()->getColumnIndex().'1', 'Card '.$x);
 
             $rowCounter = 2;
+
             foreach($rosterData as $student) {
 
-                $exportFile->getActiveSheet()
-                    ->setCellValue('A'.$rowCounter, $student["person_name_family"].', '.$student["person_name_given"]);
+                // Only want students
+                if ($student["role"] == 'Learner') {
+                    $exportFile->getActiveSheet()
+                        ->setCellValue('A'.$rowCounter, $student["person_name_family"].', '.$student["person_name_given"]);
 
-                $completed = $PDOX->rowDie("SELECT count(*) as Count FROM {$p}flashcards_activity WHERE FullName = '".$student["person_name_full"]."' AND SetID = '".$setId."' AND CardNum = '".$x."';");
+                    $completed = $PDOX->rowDie("SELECT count(*) as Count FROM {$p}flashcards_activity WHERE FullName = '".$student["person_name_full"]."' AND SetID = '".$setId."' AND CardNum = '".$x."';");
 
-                if($completed["Count"] == 1) {
-                    $exportFile->getActiveSheet()->setCellValue($columnIterator->current()->getColumnIndex().$rowCounter, 'X');
+                    if($completed["Count"] == 1) {
+                        $exportFile->getActiveSheet()->setCellValue($columnIterator->current()->getColumnIndex().$rowCounter, 'X');
+                    }
+
+                    $rowCounter++;
                 }
-
-                $rowCounter++;
             }
-
             $columnIterator->next();
         }
 
