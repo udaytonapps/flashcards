@@ -152,3 +152,12 @@ div.play-card .video {
     width: 100%;
     height: 100%;
 }
+#toggle-review-card {
+    position: absolute;
+    left: 24px;
+    font-size: 1.5em;
+}
+#toggle-review-card:hover, #toggle-review-card:active, #toggle-review-card:focus {
+    text-decoration: none;
+    font-weight: bolder;
+}

@@ -71,5 +71,13 @@ $DATABASE_INSTALL = array(
     Modified    datetime NULL,
   
     PRIMARY KEY(ActivityID)
+) ENGINE = InnoDB DEFAULT CHARSET=utf8"),
+    array( "{$CFG->dbprefix}flashcards_review",
+        "create table {$CFG->dbprefix}flashcards_review (
+    UserID      INTEGER NOT NULL,
+    SetID       INTEGER NOT NULL,
+    CardID      INTEGER NOT NULL,
+  
+    PRIMARY KEY(UserID, SetID, CardID)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8")
 );

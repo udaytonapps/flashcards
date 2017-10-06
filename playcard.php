@@ -75,6 +75,10 @@ if ($CardNum == 0) {
     $onCard = $CardNum;
 }
 
+$_SESSION["CardId"] = $theCard["CardID"];
+
+$cardKnown = $PDOX->rowDie("SELECT * FROM {$p}flashcards_review WHERE UserId = '".$USER->id."' AND SetId ='".$setId."' AND CardId = '".$theCard["CardID"]."';");
+
     if ($shortCut == 0) {
         echo('
             <ul class="breadcrumb">
@@ -150,7 +154,18 @@ if ($CardNum == 0) {
                 </div>
         
                 <input type="hidden" id="sess" value="'.$_GET["PHPSESSID"].'">
-        
+
+                <a id="toggle-review-card" href="javascript:void(0)">
+                ');
+
+                    if(!$cardKnown) {
+                        echo('<span class="fa fa-square-o">');
+                    } else {
+                        echo('<span class="fa fa-check-square-o">');
+                    }
+
+                echo('</span> I know this card</a>
+                        
                 <div class="prev-next text-center">
                     <a href="playcard.php?SetID='.$setId.'&CardNum='.$Prev.'&CardNum2='.$Prev2.'&Flag=A&Shortcut='.$shortCut.'" ');if($Prev == 0 && $Prev2 == 0){echo('class="disabled"');} echo('>
                         <span class="fa fa-3x fa-chevron-circle-left"></span>
