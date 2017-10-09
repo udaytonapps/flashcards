@@ -161,3 +161,10 @@ div.play-card .video {
     text-decoration: none;
     font-weight: bolder;
 }
+#reset-cards:hover, #reset-cards:active, #reset-cards:focus {
+    text-decoration: none;
+    font-weight: bolder;
+}
+#study-cards:hover, #study-cards:active, #study-cards:focus {
+
+}

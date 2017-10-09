@@ -46,6 +46,7 @@ if(isset($_GET["Shortcut"])) {
     $shortCut = 0;
 }
 
+$_SESSION["Shortcut"] = $shortCut;
 
 if ( $USER->instructor ) {
     include("menu.php");
@@ -108,6 +109,10 @@ if($isReviewMode == 1) {
 }
 
 $Total = count($cardsInSet);
+
+if($isReviewMode == 1 && $Total == 0) {
+    header( 'Location: '.addSession('finishedreview.php?SetID='.$setId.'&Shortcut='.$shortCut) ) ;
+}
 
 $set = $PDOX->rowDie("select * from {$p}flashcards_set where SetID=".$setId.";");
 
@@ -210,7 +215,7 @@ $_SESSION["CardId"] = $theCard["CardID"];
                     echo('<a class="btn btn-default" href="playcard.php?SetID='.$set["SetID"].'&CardNum=1&CardNum2=0&Flag=A&ReviewMode=1&Shortcut='.$shortCut.'"><span class="fa fa-square-o"></span> Review Mode</a>');
                 }
 
-                echo('</p>
+                echo(' <a id="reset-cards" href="ResetKnownCards_Submit.php?ReviewMode='.$isReviewMode.'&Shortcut='.$shortCut.'" class="pull-right"><span class="fa fa-refresh"></span> Reset Cards</a></p>
             </div>
             
             <div class="col-sm-9" id="play-card-column">    
