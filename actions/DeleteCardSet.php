@@ -1,5 +1,5 @@
 <?php
-require_once "../config.php";
+require_once "../../config.php";
 
 use \Tsugi\Core\LTIX;
 
@@ -18,5 +18,5 @@ if ( $USER->instructor ) {
     // Delete set
     $PDOX->queryDie("DELETE FROM {$p}flashcards_set where SetID=".$SetID.";");
 
-    header( 'Location: '.addSession('index.php') ) ;
+    header( 'Location: '.addSession('../index.php') ) ;
 }

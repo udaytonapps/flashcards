@@ -24,9 +24,7 @@ if ( $USER->instructor ) {
 
     $previousLink = $PDOX->rowDie("SELECT * FROM {$p}flashcards_link WHERE link_id ='".$linkId."';");
 
-    echo('<small>DEV: From Link '.$LINK->id.'</small>');
-
-    echo('<form action="LinkToSet_Submit.php" method="post">
+    echo('<form action="actions/LinkToSet_Submit.php" method="post">
 
         <div class="row">
             <div class="col-sm-offset-1 col-sm-8">
@@ -53,7 +51,7 @@ if ( $USER->instructor ) {
                 echo('</select>
                 </div>
                 <input class="btn btn-primary" type="submit" value="Link to Flashcard Set" /> 
-                <a href="UnlinkFromSet_Submit.php" class="btn btn-danger">Unlink</a>
+                <a href="actions/UnlinkFromSet_Submit.php" class="btn btn-danger">Unlink</a>
             </div>
         </div>
 

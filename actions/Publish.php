@@ -1,5 +1,5 @@
 <?php
-require_once "../config.php";
+require_once "../../config.php";
 
 use \Tsugi\Core\LTIX;
 
@@ -15,7 +15,7 @@ if ( $USER->instructor ) {
 
     $PDOX->queryDie("update {$p}flashcards_set set Active=".$Flag." where SetID=".$SetID);
 
-    header( 'Location: '.addSession('index.php') ) ;
+    header( 'Location: '.addSession('../index.php') ) ;
 }
 
 

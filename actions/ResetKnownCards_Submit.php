@@ -1,5 +1,5 @@
 <?php
-require_once "../config.php";
+require_once "../../config.php";
 
 use \Tsugi\Core\LTIX;
 
@@ -19,4 +19,4 @@ if(isset($_GET["ReviewMode"])){
     $isReviewMode = 0;
 }
 
-header( 'Location: '.addSession('playcard.php?SetID='.$setId.'&CardNum=1&CardNum2=0&Flag=A&Shortcut='.$_SESSION["Shortcut"].'&ReviewMode='.$isReviewMode) ) ;
+header( 'Location: '.addSession('../PlayCard.php?SetID='.$setId.'&CardNum=1&CardNum2=0&Flag=A&Shortcut='.$_SESSION["Shortcut"].'&ReviewMode='.$isReviewMode) ) ;

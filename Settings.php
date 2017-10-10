@@ -28,9 +28,16 @@ if ( $USER->instructor ) {
 
     include("menu.php");
 
+    echo('
+            <ul class="breadcrumb">
+                <li><a href="index.php">All Card Sets</a></li>
+                <li>'.$CardSetName.'</li>
+            </ul>
+        ');
+
     ?>
 
-    <form  method="post" action="setting_submit.php">
+    <form  method="post" action="actions/Settings_Submit.php">
 
         <div class="row">
             <div class="col-sm-offset-1 col-sm-8">
@@ -57,7 +64,7 @@ if ( $USER->instructor ) {
 
                 <input class="btn btn-primary" type="submit" value="Update Flashcard Set" />
                 <a href="index.php" class="btn btn-danger">Cancel</a>
-                <a href="DeleteCardSet.php?SetID=<?php echo($setId); ?>" class="btn btn-danger pull-right" onclick="return ConfirmDeleteCardSet();"><span class="fa fa-trash-o"></span> Delete</a>
+                <a href="actions/DeleteCardSet.php?SetID=<?php echo($setId); ?>" class="btn btn-danger pull-right" onclick="return ConfirmDeleteCardSet();"><span class="fa fa-trash-o"></span> Delete</a>
             </div>
         </div>
     </form>

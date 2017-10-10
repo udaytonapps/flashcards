@@ -6,7 +6,7 @@ $linkId = $LINK->id;
 $shortcut = $PDOX->rowDie("SELECT SetId FROM {$p}flashcards_link WHERE link_id = '".$linkId."';");
 if (isset($shortcut["SetId"])) {
     $shortcutSet = $PDOX->rowDie("SELECT * FROM {$p}flashcards_set WHERE SetID = '".$shortcut["SetId"]."';");
-    echo('<br /><small><span class="fa fa-link"></span> This instance of Flashcards is linked to <a href="playcard.php?SetID='.$shortcut["SetId"].'&CardNum=1&CardNum2=0&Flag=A">'.$shortcutSet["CardSetName"].'</a>.</small>');
+    echo('<br /><small><span class="fa fa-link"></span> This instance of Flashcards is linked to <a href="PlayCard.php?SetID='.$shortcut["SetId"].'&CardNum=1&CardNum2=0&Flag=A">'.$shortcutSet["CardSetName"].'</a>.</small>');
 }
 
 echo('</h2>');
@@ -42,13 +42,13 @@ echo('<div class="row">');
                 <div class="col-sm-4">
                     <div class="panel panel-'.$panelClass.$cardsPile.'">
                         <div class="panel-heading">
-                            <a class="btn btn-'.$panelClass.' pull-right" href="publish.php?SetID='.$row["SetID"].'&Flag='.$flag.'">'.$pubAction.'</a>
                             <h3>
-                                <a href="list.php?SetID='.$row["SetID"].'">
+                                <a href="AllCards.php?SetID='.$row["SetID"].'">
                                     <span class="fa fa-pencil-square-o"></span>
                                     '.$row["CardSetName"].'
                                 </a>
                             </h3>
+                            <a class="btn btn-'.$panelClass.' pull-right publish-link" href="actions/Publish.php?SetID='.$row["SetID"].'&Flag='.$flag.'">'.$pubAction.'</a>
                             <small>'.count($cards).' Cards</small>
                         </div>
                         <div class="panel-body">
@@ -62,21 +62,21 @@ echo('<div class="row">');
                             </div>
                             <div class="row">
                                 <div class="col-xs-6 text-center">
-                                    <a href="playcard.php?SetID='.$row["SetID"].'&CardNum=1&CardNum2=0&Flag=A" ');if(count($cards) == 0){echo('class="disabled"');}echo('>
+                                    <a href="PlayCard.php?SetID='.$row["SetID"].'&CardNum=1&CardNum2=0&Flag=A" ');if(count($cards) == 0){echo('class="disabled"');}echo('>
                                     <span class="fa fa-2x fa-th-large"></span>
                                     <br />
                                     <small>Flashcards</small>
                                     </a>
                                 </div>
                                 <div class="col-xs-3 text-center">
-                                    <a href="usage.php?SetID='.$row["SetID"].'" ');if(count($cards) == 0){echo('class="disabled"');}echo('>
+                                    <a href="Usage.php?SetID='.$row["SetID"].'" ');if(count($cards) == 0){echo('class="disabled"');}echo('>
                                     <span class="fa fa-2x fa-bar-chart"></span>
                                     <br />
                                     <small>Usage</small>
                                     </a>
                                 </div>
                                 <div class="col-xs-3 text-center">
-                                    <a href="setting.php?SetID='.$row["SetID"].'">
+                                    <a href="Settings.php?SetID='.$row["SetID"].'">
                                     <span class="fa fa-2x fa-cog"></span>
                                     <br />
                                     <small>Settings</small>
@@ -128,7 +128,7 @@ foreach ( $courses as $course ) {
         }
 
         echo('
-            <a href="copy1.php?SetID='.$set["SetID"].'"  onclick="return ConfirmCopyCardSet();" class="list-group-item">
+            <a href="actions/ImportCardSet.php?SetID='.$set["SetID"].'"  onclick="return ConfirmCopyCardSet();" class="list-group-item">
                 <div class="list-group-item-heading">
                     <span class="label label-'.$countLabel.' pull-right">'.count($cards2).' Cards</span>
                     <span class="fa-stack small text-'.$textLabel.'">

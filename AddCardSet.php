@@ -20,7 +20,7 @@ if ( $USER->instructor ) {
 
     ?>
 
-    <form action="AddCardSet_Submit.php" method="post">
+    <form action="actions/AddCardSet_Submit.php" method="post">
 
         <div class="row">
             <div class="col-sm-offset-1 col-sm-8">

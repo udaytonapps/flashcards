@@ -1,5 +1,5 @@
 <?php
-require_once "../config.php";
+require_once "../../config.php";
 
 use \Tsugi\Core\LTIX;
 
@@ -21,5 +21,5 @@ $SideB = str_replace("'", "&#39;", $SideB);
 if ( $USER->instructor ) {
 
     $PDOX->queryDie("update {$p}flashcards set SideA='".$SideA."', SideB='".$SideB."',TypeA='".$TypeA."', TypeB='".$TypeB."' where CardID=".$CardID);
-    header( 'Location: '.addSession('list.php?SetID='.$SetID) ) ;
+    header( 'Location: '.addSession('../AllCards.php?SetID='.$SetID) ) ;
 }

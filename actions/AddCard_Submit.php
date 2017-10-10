@@ -1,5 +1,5 @@
 <?php
-require_once "../config.php";
+require_once "../../config.php";
 
 use \Tsugi\Core\LTIX;
 
@@ -23,5 +23,5 @@ if ( $USER->instructor ) {
 
     $PDOX->queryDie("INSERT INTO {$p}flashcards (SetID, CardNum, SideA, SideB, TypeA, TypeB) VALUES ( $SetID, $CardNum, '$SideA', '$SideB', '$TypeA', '$TypeB' )",
         array(':SetID' => $SetID, ':CardNum' => $CardNum, ':SideA' => $SideA,':SideB' => $SideB,':TypeA' => $TypeA,':TypeB' => $TypeB)  );
-    header( 'Location: '.addSession('list.php?SetID='.$SetID) ) ;
+    header( 'Location: '.addSession('../AllCards.php?SetID='.$SetID) ) ;
 }

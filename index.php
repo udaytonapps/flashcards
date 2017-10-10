@@ -1,12 +1,16 @@
 <?php
 require_once('../config.php');
+require_once('dao/FlashcardsDAO.php');
 
 use \Tsugi\Core\LTIX;
+use \Flashcards\DAO\FlashcardsDAO;
 
 // Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
 $p = $CFG->dbprefix;
+
+$flashcardsDAO = new FlashcardsDAO($PDOX, $p);
 
 // Start of the output
 $OUTPUT->header();
@@ -27,9 +31,9 @@ if ( $USER->instructor ) {
 }else{ // student
 
     $linkId = $LINK->id;
-    $shortcut = $PDOX->rowDie("SELECT SetId FROM {$p}flashcards_link WHERE link_id = '".$linkId."';");
+    $shortcut = $flashcardsDAO->getShortCutSetIdForLink($linkId);
     if (isset($shortcut["SetId"])) {
-        header( 'Location: '.addSession('playcard.php?SetID='.$shortcut["SetId"].'&CardNum=1&CardNum2=0&Flag=A&Shortcut=1"') ) ;
+        header( 'Location: '.addSession('PlayCard.php?SetID='.$shortcut["SetId"].'&CardNum=1&CardNum2=0&Flag=A&Shortcut=1"') ) ;
     } else {
         include("student-home.php");
     }

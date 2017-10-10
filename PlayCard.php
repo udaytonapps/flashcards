@@ -86,9 +86,9 @@ $cardKnown = $PDOX->rowDie("SELECT * FROM {$p}flashcards_review WHERE UserId = '
 if($isReviewMode == 1) {
 
     if($cardKnown && $CardNum == 0) {
-        header( 'Location: '.addSession('playcard.php?CardNum=0&CardNum2='.++$CardNum2.'&Flag=A&SetID='.$setId.'&Shortcut='.$shortCut.'&ReviewMode='.$isReviewMode) ) ;
+        header( 'Location: '.addSession('PlayCard.php?CardNum=0&CardNum2='.++$CardNum2.'&Flag=A&SetID='.$setId.'&Shortcut='.$shortCut.'&ReviewMode='.$isReviewMode) ) ;
     } else if ($cardKnown && $CardNum2 == 0) {
-        header( 'Location: '.addSession('playcard.php?CardNum='.++$CardNum.'&CardNum2=0&Flag=A&SetID='.$setId.'&Shortcut='.$shortCut.'&ReviewMode='.$isReviewMode) ) ;
+        header( 'Location: '.addSession('PlayCard.php?CardNum='.++$CardNum.'&CardNum2=0&Flag=A&SetID='.$setId.'&Shortcut='.$shortCut.'&ReviewMode='.$isReviewMode) ) ;
     }
 
     $knownCards = $PDOX->allRowsDie("SELECT CardID FROM {$p}flashcards_review WHERE UserId = '".$USER->id."' AND SetId = '".$setId."';");
@@ -111,7 +111,7 @@ if($isReviewMode == 1) {
 $Total = count($cardsInSet);
 
 if($isReviewMode == 1 && $Total == 0) {
-    header( 'Location: '.addSession('finishedreview.php?SetID='.$setId.'&Shortcut='.$shortCut) ) ;
+    header( 'Location: '.addSession('FinishedReview.php?SetID='.$setId.'&Shortcut='.$shortCut) ) ;
 }
 
 $set = $PDOX->rowDie("select * from {$p}flashcards_set where SetID=".$setId.";");
@@ -189,7 +189,7 @@ $_SESSION["CardId"] = $theCard["CardID"];
         echo('
             <ul class="breadcrumb">
                 <li><a href="index.php">All Card Sets</a></li>
-                <li>'.$set["CardSetName"].'</li>
+                <li>' .$set["CardSetName"].'</li>
             </ul>
         ');
     }
@@ -205,17 +205,17 @@ $_SESSION["CardId"] = $theCard["CardID"];
                     </div>
                 </div>
                 <p>
-                    <a class="btn btn-primary" href="shuffle.php?SetID='.$set["SetID"].'&Shortcut='.$shortCut.'&ReviewMode='.$isReviewMode.'"><span class="fa fa-random"></span> Shuffle Cards</a>                
+                    <a class="btn btn-primary" href="actions/Shuffle.php?SetID='.$set["SetID"].'&Shortcut='.$shortCut.'&ReviewMode='.$isReviewMode.'"><span class="fa fa-random"></span> Shuffle Cards</a>                
                 </p>
                 <p>');
 
                 if($isReviewMode == 1) {
-                    echo('<a class="btn btn-success" href="playcard.php?SetID='.$set["SetID"].'&CardNum=1&CardNum2=0&Flag=A&ReviewMode=0&Shortcut='.$shortCut.'"><span class="fa fa-check-square-o"></span> Review Mode</a>');
+                    echo('<a class="btn btn-success" href="PlayCard.php?SetID='.$set["SetID"].'&CardNum=1&CardNum2=0&Flag=A&ReviewMode=0&Shortcut='.$shortCut.'"><span class="fa fa-check-square-o"></span> Review Mode</a>');
                 } else {
-                    echo('<a class="btn btn-default" href="playcard.php?SetID='.$set["SetID"].'&CardNum=1&CardNum2=0&Flag=A&ReviewMode=1&Shortcut='.$shortCut.'"><span class="fa fa-square-o"></span> Review Mode</a>');
+                    echo('<a class="btn btn-default" href="PlayCard.php?SetID='.$set["SetID"].'&CardNum=1&CardNum2=0&Flag=A&ReviewMode=1&Shortcut='.$shortCut.'"><span class="fa fa-square-o"></span> Review Mode</a>');
                 }
 
-                echo(' <a id="reset-cards" href="ResetKnownCards_Submit.php?ReviewMode='.$isReviewMode.'&Shortcut='.$shortCut.'" class="pull-right"><span class="fa fa-refresh"></span> Reset Cards</a></p>
+                echo(' <a id="reset-cards" href="actions/ResetKnownCards_Submit.php?ReviewMode='.$isReviewMode.'&Shortcut='.$shortCut.'" class="pull-right"><span class="fa fa-refresh"></span> Reset Cards</a></p>
             </div>
             
             <div class="col-sm-9" id="play-card-column">    
@@ -273,13 +273,13 @@ $_SESSION["CardId"] = $theCard["CardID"];
                 echo('</span> I know this card</a>
                         
                 <div class="prev-next text-center">
-                    <a href="playcard.php?SetID='.$setId.'&CardNum='.$Prev.'&CardNum2='.$Prev2.'&Flag=A&Shortcut='.$shortCut.'&ReviewMode='.$isReviewMode.'" ');if($Prev == 0 && $Prev2 == 0){echo('class="disabled"');} echo('>
+                    <a href="PlayCard.php?SetID='.$setId.'&CardNum='.$Prev.'&CardNum2='.$Prev2.'&Flag=A&Shortcut='.$shortCut.'&ReviewMode='.$isReviewMode.'" ');if($Prev == 0 && $Prev2 == 0){echo('class="disabled"');} echo('>
                         <span class="fa fa-3x fa-chevron-circle-left"></span>
                     </a>
                     <a href="javascript:void(0);" id="flip-link">
                         <span class="fa fa-3x fa-undo"></span>
                     </a>
-                    <a id="next-link" href="playcard.php?SetID='.$setId.'&CardNum='.$Next.'&CardNum2='.$Next2.'&Flag=A&Shortcut='.$shortCut.'&ReviewMode='.$isReviewMode.'" ');if(!$Next && !$Next2){echo('class="disabled"');} echo('>
+                    <a id="next-link" href="PlayCard.php?SetID='.$setId.'&CardNum='.$Next.'&CardNum2='.$Next2.'&Flag=A&Shortcut='.$shortCut.'&ReviewMode='.$isReviewMode.'" ');if(!$Next && !$Next2){echo('class="disabled"');} echo('>
                         <span class="fa fa-3x fa-chevron-circle-right"></span>
                     </a>
                 </div>

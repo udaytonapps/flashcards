@@ -1,5 +1,5 @@
 <?php
-require_once "../config.php";
+require_once "../../config.php";
 
 use \Tsugi\Core\LTIX;
 
@@ -50,4 +50,4 @@ for ($x = 1; $x <= $TotalCards; $x++) {
     $PDOX->queryDie("update {$p}flashcards set CardNum2=".$CardNum2." where CardNum=".$CardNum." AND SetID=".$SetID);
 }
 
-header( 'Location: '.addSession('playcard.php?CardNum=0&CardNum2=1&Flag=A&SetID='.$SetID.'&Shortcut='.$shortCut.'&ReviewMode='.$reviewMode) ) ;
+header( 'Location: '.addSession('../PlayCard.php?CardNum=0&CardNum2=1&Flag=A&SetID='.$SetID.'&Shortcut='.$shortCut.'&ReviewMode='.$reviewMode) ) ;

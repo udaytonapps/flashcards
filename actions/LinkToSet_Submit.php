@@ -1,5 +1,5 @@
 <?php
-require_once "../config.php";
+require_once "../../config.php";
 
 use \Tsugi\Core\LTIX;
 
@@ -22,5 +22,5 @@ if ( $USER->instructor ) {
             array(':linkId' => $linkId, ':setId' => $setId)  );
     }
 
-    header( 'Location: '.addSession('index.php') ) ;
+    header( 'Location: '.addSession('../index.php') ) ;
 }

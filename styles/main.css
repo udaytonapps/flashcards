@@ -2,6 +2,9 @@
 * {
     border-radius: 0 !important;
 }
+h3 {
+    font-size: 22px;
+}
 a.disabled, a.disabled:hover {
     cursor: not-allowed;
     pointer-events: none;
@@ -25,7 +28,7 @@ div.row {
 span.menu-with-icon {
     padding-left: 2.2em;
 }
-.panel-heading > a.pull-right {
+.panel-heading.list-card > a.pull-right {
     margin-top: 1em;
 }
 .panel-heading .deleteCard {
@@ -42,6 +45,10 @@ span.menu-with-icon {
 }
 .panel-body a:hover {
     text-decoration: none;
+}
+a.publish-link {
+    font-size: .85em;
+    margin-top: -4px;
 }
 #import-cards-row {
     border: 1px solid #E0E0E0;
@@ -166,5 +173,6 @@ div.play-card .video {
     font-weight: bolder;
 }
 #study-cards:hover, #study-cards:active, #study-cards:focus {
-
+    text-decoration: none;
+    font-weight: bolder;
 }

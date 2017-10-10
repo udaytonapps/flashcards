@@ -28,7 +28,7 @@ if ( $USER->instructor ) {
     echo('
         <ul class="breadcrumb">
             <li><a href="index.php">All Card Sets</a></li>
-            <li>'.$set["CardSetName"].'</li>
+            <li>' .$set["CardSetName"].'</li>
         </ul>
         
         <div class="row cardRow">
@@ -49,22 +49,22 @@ if ( $USER->instructor ) {
             echo('
             <div class="col-md-6">
                 <div class="panel panel-info">
-                    <div class="panel-heading">
-                        <a class="btn btn-danger pull-right deleteCard" href="DeleteCard.php?CardID='.$row["CardID"].'&SetID='.$row["SetID"].'" onclick="return ConfirmDeleteCard();"><span class="fa fa-trash-o"></span></a>
+                    <div class="panel-heading list-card">
+                        <a class="btn btn-danger pull-right deleteCard" href="actions/DeleteCard.php?CardID='.$row["CardID"].'&SetID='.$row["SetID"].'" onclick="return ConfirmDeleteCard();"><span class="fa fa-trash-o"></span></a>
                         <a class="btn btn-primary pull-right" href="EditCard.php?CardID='.$row["CardID"].'&SetID='.$row["SetID"].'">Edit</a>
                         <h3 class="card-order">
                             '.$cardNum.'. 
         ');
             if($cardNum != 1) {
                 echo('
-                            <a href="move.php?CardID=' . $row["CardID"] . '&CardNum=' . $row["CardNum"] . '&SetID=' . $_GET["SetID"] . '&Flag=1">
+                            <a href="actions/Move.php?CardID=' . $row["CardID"] . '&CardNum=' . $row["CardNum"] . '&SetID=' . $_GET["SetID"] . '&Flag=1">
                                 <span class="fa fa-chevron-circle-up"></span>
                             </a>
                 ');
             }
             if($cardNum != $Total) {
                 echo('
-                            <a href="move.php?CardID=' . $row["CardID"] . '&CardNum=' . $row["CardNum"] . '&SetID=' . $_GET["SetID"] . '&Flag=0">
+                            <a href="actions/Move.php?CardID=' . $row["CardID"] . '&CardNum=' . $row["CardNum"] . '&SetID=' . $_GET["SetID"] . '&Flag=0">
                                 <span class="fa fa-chevron-circle-down"></span>
                             </a>
                 ');

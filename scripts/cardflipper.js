@@ -19,7 +19,7 @@ var flip = function() {
     $('iframe').toggle();
     var sess = $('input#sess').val();
     $.ajax({
-        url: "AddActivity.php?PHPSESSID="+sess,
+        url: "actions/AddActivity.php?PHPSESSID="+sess,
         success: function(response){
             console.log(response);
         }
@@ -29,7 +29,7 @@ var flip = function() {
 var toggleReviewCard = function() {
     var sess = $('input#sess').val();
     $.ajax({
-        url: "ToggleReviewed_Submit.php?PHPSESSID="+sess,
+        url: "actions/ToggleReviewed_Submit.php?PHPSESSID="+sess,
         success: function(response){
             var reviewCard = $('#toggle-review-card');
             var toggleIcon = reviewCard.find('span.fa');

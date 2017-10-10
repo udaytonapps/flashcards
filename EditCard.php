@@ -26,14 +26,14 @@ if ( $USER->instructor ) {
     echo('
         <ul class="breadcrumb">
             <li><a href="index.php">All Card Sets</a></li>
-            <li><a href="list.php?SetID='.$setId.'">'.$set["CardSetName"].'</a></li>
+            <li><a href="AllCards.php?SetID=' .$setId.'">'.$set["CardSetName"].'</a></li>
             <li>Edit Card</li>
         </ul>
     ');
 
     ?>
 
-    <form method="post" action="EditCard_Submit.php">
+    <form method="post" action="actions/EditCard_Submit.php">
 
         <div class="row">
             <div class="col-sm-offset-1 col-sm-8">
@@ -73,7 +73,7 @@ if ( $USER->instructor ) {
                 <input type="hidden" name="CardID" value="<?php echo $_GET["CardID"];?>"/>
 
                 <input type="submit" value="Update Card" class="btn btn-primary">
-                <a href="list.php?SetID=<?php echo $_GET["SetID"];?>" class="btn btn-danger">Cancel</a>
+                <a href="AllCards.php?SetID=<?php echo $_GET["SetID"];?>" class="btn btn-danger">Cancel</a>
 
             </div>
         </div>

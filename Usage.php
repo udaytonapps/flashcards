@@ -27,6 +27,13 @@ if ( $USER->instructor ) {
 
     $set = $PDOX->rowDie("select * from {$p}flashcards_set where SetID=".$setId.";");
 
+    echo('
+            <ul class="breadcrumb">
+                <li><a href="index.php">All Card Sets</a></li>
+                <li>' .$set["CardSetName"].'</li>
+            </ul>
+        ');
+
     $cardsInSet = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$setId.";");
     $totalCards = count($cardsInSet);
 
@@ -36,7 +43,7 @@ if ( $USER->instructor ) {
 
         echo('<div class="row">
                   <div class="col-sm-12">
-                      <h3><a href="exportActivity.php?SetID='.$setId.'" class="btn btn-link pull-right">Export Activity to Excel</a><span class="fa fa-bar-chart"></span> '.$set["CardSetName"].' Activity</h3>
+                      <h3><a href="actions/ExportActivity.php?SetID='.$setId.'" class="btn btn-link pull-right">Export Usage to Excel</a><span class="fa fa-bar-chart"></span> '.$set["CardSetName"].' Usage</h3>
                   </div>
               </div>');
 

@@ -46,7 +46,7 @@ if ($shortCut == 0) {
     echo('
             <ul class="breadcrumb">
                 <li><a href="index.php">All Card Sets</a></li>
-                <li>'.$set["CardSetName"].'</li>
+                <li>' .$set["CardSetName"].'</li>
             </ul>
         ');
 }
@@ -58,10 +58,10 @@ echo('<div class="container">
                 <input type="hidden" id="sess" value="'.$_GET["PHPSESSID"].'">
             </div>
             <div class="col-xs-6 text-center">
-                <h2><a id="study-cards" href="playcard.php?SetID='.$setId.'&CardNum=1&CardNum2=0&Flag=A&Shortcut='.$shortCut.'"><span class="fa fa-th-large"></span> Study</a></h2>            
+                <h2><a id="study-cards" href="PlayCard.php?SetID='.$setId.'&CardNum=1&CardNum2=0&Flag=A&Shortcut='.$shortCut.'"><span class="fa fa-th-large"></span> Study</a></h2>            
             </div>
             <div class="col-xs-6 text-center">
-                <h2><a id="reset-cards" href="ResetKnownCards_Submit.php?ReviewMode=1&Shortcut='.$shortCut.'"><span class="fa fa-refresh"></span> Reset</a></h2>            
+                <h2><a id="reset-cards" href="actions/ResetKnownCards_Submit.php?ReviewMode=1&Shortcut='.$shortCut.'"><span class="fa fa-refresh"></span> Reset</a></h2>            
             </div>
       </div>
      ');
