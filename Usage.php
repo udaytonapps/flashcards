@@ -61,7 +61,7 @@ if ( $USER->instructor ) {
 
                 $numberCompleted = $flashcardsDAO->getNumberOfSeenCards($student["user_id"], $setId);
 
-                $percentComplete = $numberCompleted["Count"] / $totalCards * 100;
+                $percentComplete = $numberCompleted / $totalCards * 100;
 
                 if($percentComplete < 25) {
                     $progressClass = 'danger';
@@ -74,7 +74,7 @@ if ( $USER->instructor ) {
                 echo('<div class="col-sm-6">
                     <div class="progress">
                         <div class="progress-bar progress-bar-'.$progressClass.'" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:'.$percentComplete.'%">
-                            '.$numberCompleted["Count"].' / '.$totalCards.' Cards Viewed
+                            '.$numberCompleted.' / '.$totalCards.' Cards Viewed
                         </div>
                     </div>
                   </div>
