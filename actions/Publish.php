@@ -17,7 +17,7 @@ $Flag = $_GET["Flag"];
 
 if ( $USER->instructor ) {
 
-    $flashcardsDAO->togglePublishCardSet($setId, $toggle);
+    $flashcardsDAO->togglePublishCardSet($SetID, $Flag);
 }
 
 header( 'Location: '.addSession('../index.php') ) ;
