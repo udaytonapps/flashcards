@@ -51,7 +51,7 @@ if ( $USER->instructor ) {
 
         $rosterData = $GLOBALS['ROSTER']->data;
 
-        usort($rosterData, "compareStudentsLastName");
+        usort($rosterData, array('FlashcardUtils', 'compareStudentsLastName'));
 
         foreach($rosterData as $student) {
             // Only want students
