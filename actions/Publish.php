@@ -1,21 +1,23 @@
 <?php
 require_once "../../config.php";
+require_once "../dao/FlashcardsDAO.php";
 
 use \Tsugi\Core\LTIX;
+use \Flashcards\DAO\FlashcardsDAO;
 
 // Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
 $p = $CFG->dbprefix;
 
+$flashcardsDAO = new FlashcardsDAO($PDOX, $p);
+
 $SetID=$_GET["SetID"];
 $Flag = $_GET["Flag"];
 
 if ( $USER->instructor ) {
 
-    $PDOX->queryDie("update {$p}flashcards_set set Active=".$Flag." where SetID=".$SetID);
-
-    header( 'Location: '.addSession('../index.php') ) ;
+    $flashcardsDAO->togglePublishCardSet($setId, $toggle);
 }
 
-
+header( 'Location: '.addSession('../index.php') ) ;

@@ -3,26 +3,28 @@
 echo('<h2>Card Sets');
 
 $linkId = $LINK->id;
-$shortcut = $PDOX->rowDie("SELECT SetId FROM {$p}flashcards_link WHERE link_id = '".$linkId."';");
-if (isset($shortcut["SetId"])) {
-    $shortcutSet = $PDOX->rowDie("SELECT * FROM {$p}flashcards_set WHERE SetID = '".$shortcut["SetId"]."';");
-    echo('<br /><small><span class="fa fa-link"></span> This instance of Flashcards is linked to <a href="PlayCard.php?SetID='.$shortcut["SetId"].'&CardNum=1&CardNum2=0&Flag=A">'.$shortcutSet["CardSetName"].'</a>.</small>');
+
+$shortcut = $flashcardsDAO->getShortcutSetIdForLink($linkId);
+
+if (isset($shortcut["SetID"])) {
+    $shortcutSet = $flashcardsDAO->getFlashcardSetById($shortcut["SetId"]);
+    echo('<br /><small><span class="fa fa-link"></span> This instance of Flashcards is linked to <a href="PlayCard.php?SetID='.$shortcut["SetID"].'&CardNum=1&CardNum2=0&Flag=A">'.$shortcutSet["CardSetName"].'</a>.</small>');
 }
 
 echo('</h2>');
 
-$rows = $PDOX->allRowsDie("select * from {$p}flashcards_set where CourseName='".$_SESSION["CourseName"]."' order by CardSetName;'");
+$allCardSets = $flashcardsDAO->getAllSetsForSiteSorted($CONTEXT->id);
 
-if (count($rows) == 0) {
+if (count($allCardSets) == 0) {
     echo('<p><em>You currently do not have any card sets in this site. Create a new card set or use the import button below to copy a card set from another site.</em></p>');
 }
 
 echo('<div class="row">');
 
-    foreach ( $rows as $row ) {
-        if ($row["Visible"]) {
+    foreach ( $allCardSets as $cardSet ) {
+        if ($cardSet["Visible"]) {
 
-            if($row["Active"] == 0) {
+            if($cardSet["Active"] == 0) {
                 $flag = 1;
                 $panelClass = 'default';
                 $pubAction = 'Unpublished';
@@ -32,7 +34,7 @@ echo('<div class="row">');
                 $pubAction = 'Published';
             }
 
-            $cards = $PDOX->allRowsDie("select * from {$p}flashcards where SetID=" . $row["SetID"]);
+            $cards = $flashcardsDAO->getCardsInSet($cardSet["SetID"]);
             if (count($cards) > 0) {
                 $cardsPile = ' cards-pile';
             } else {
@@ -43,12 +45,12 @@ echo('<div class="row">');
                     <div class="panel panel-'.$panelClass.$cardsPile.'">
                         <div class="panel-heading">
                             <h3>
-                                <a href="AllCards.php?SetID='.$row["SetID"].'">
+                                <a href="AllCards.php?SetID='.$cardSet["SetID"].'">
                                     <span class="fa fa-pencil-square-o"></span>
-                                    '.$row["CardSetName"].'
+                                    '.$cardSet["CardSetName"].'
                                 </a>
                             </h3>
-                            <a class="btn btn-'.$panelClass.' pull-right publish-link" href="actions/Publish.php?SetID='.$row["SetID"].'&Flag='.$flag.'">'.$pubAction.'</a>
+                            <a class="btn btn-'.$panelClass.' pull-right publish-link" href="actions/Publish.php?SetID='.$cardSet["SetID"].'&Flag='.$flag.'">'.$pubAction.'</a>
                             <small>'.count($cards).' Cards</small>
                         </div>
                         <div class="panel-body">
@@ -62,21 +64,21 @@ echo('<div class="row">');
                             </div>
                             <div class="row">
                                 <div class="col-xs-6 text-center">
-                                    <a href="PlayCard.php?SetID='.$row["SetID"].'&CardNum=1&CardNum2=0&Flag=A" ');if(count($cards) == 0){echo('class="disabled"');}echo('>
+                                    <a href="PlayCard.php?SetID='.$cardSet["SetID"].'&CardNum=1&CardNum2=0&Flag=A" ');if(count($cards) == 0){echo('class="disabled"');}echo('>
                                     <span class="fa fa-2x fa-th-large"></span>
                                     <br />
                                     <small>Flashcards</small>
                                     </a>
                                 </div>
                                 <div class="col-xs-3 text-center">
-                                    <a href="Usage.php?SetID='.$row["SetID"].'" ');if(count($cards) == 0){echo('class="disabled"');}echo('>
+                                    <a href="Usage.php?SetID='.$cardSet["SetID"].'" ');if(count($cards) == 0){echo('class="disabled"');}echo('>
                                     <span class="fa fa-2x fa-bar-chart"></span>
                                     <br />
                                     <small>Usage</small>
                                     </a>
                                 </div>
                                 <div class="col-xs-3 text-center">
-                                    <a href="Settings.php?SetID='.$row["SetID"].'">
+                                    <a href="Settings.php?SetID='.$cardSet["SetID"].'">
                                     <span class="fa fa-2x fa-cog"></span>
                                     <br />
                                     <small>Settings</small>
@@ -94,7 +96,7 @@ echo('</div>');
 
 /* Import from site */
 
-$courses = $PDOX->allRowsDie("SELECT DISTINCT CourseName FROM {$p}flashcards_set where UserName='".$_SESSION["UserName"]."' AND CourseName !='".$_SESSION["CourseName"]."' AND Visible=1");
+$courses = $flashcardsDAO->getAllSitesForUserWithACardSet($USER->id, $CONTEXT->id);
 
 echo('
     
@@ -109,15 +111,15 @@ echo('
 
 foreach ( $courses as $course ) {
 
-    $sets = $PDOX->allRowsDie("SELECT CardSetName, SetID FROM {$p}flashcards_set where CourseName='" . $course['CourseName'] . "' order by CardSetName");
+    $sets = $flashcardsDAO->getAllSetsForSiteSorted($course["context_id"]);
 
     echo('<div id="card-set-list" class="list-group col-md-4">');
 
-    echo('<h4>'.$course["CourseName"].'</h4>');
+    echo('<h4>'.$flashcardsDAO->getCourseNameForId($course["context_id"]).'</h4>');
 
     foreach ($sets as $set) {
 
-        $cards2 = $PDOX->allRowsDie("select * from {$p}flashcards where SetID=" . $set["SetID"]);
+        $cards2 = $flashcardsDAO->getCardsInSet($set["SetID"]);
 
         if (count($cards2) > 0) {
             $countLabel = 'success';

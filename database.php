@@ -14,8 +14,8 @@ $DATABASE_INSTALL = array(
     array( "{$CFG->dbprefix}flashcards_set",
         "create table {$CFG->dbprefix}flashcards_set (
     SetID       INTEGER NOT NULL AUTO_INCREMENT,
-    UserName    varchar(30) NULL,
-    CourseName  varchar(200) NULL,
+    UserID      INTEGER NULL,
+    context_id  INTEGER NULL,
     CardSetName varchar(255) NULL,
     Category    varchar(50) NULL,
     Modified    datetime NULL,
@@ -34,7 +34,7 @@ $DATABASE_INSTALL = array(
         REFERENCES `{$CFG->dbprefix}flashcards_set` (`SetID`)
         ON UPDATE CASCADE,
         
-    UNIQUE(link_id)
+    PRIMARY KEY(link_id)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8"),
     array( "{$CFG->dbprefix}flashcards",
         "create table {$CFG->dbprefix}flashcards (
@@ -64,10 +64,9 @@ $DATABASE_INSTALL = array(
     array( "{$CFG->dbprefix}flashcards_activity",
         "create table {$CFG->dbprefix}flashcards_activity (
     ActivityID  INTEGER NOT NULL AUTO_INCREMENT,
-    UserName    varchar(30) NULL,
-    FullName    varchar(50) NULL,
+    UserID      INTEGER NULL,
     SetID       INTEGER NULL,
-    CardNum     INTEGER NOT NULL,
+    CardID      INTEGER NOT NULL,
     Modified    datetime NULL,
   
     PRIMARY KEY(ActivityID)

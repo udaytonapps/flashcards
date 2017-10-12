@@ -1,12 +1,16 @@
 <?php
 require_once "../config.php";
+require_once "dao/FlashcardsDAO.php";
 
 use \Tsugi\Core\LTIX;
+use \Flashcards\DAO\FlashcardsDAO;
 
 // Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
 $p = $CFG->dbprefix;
+
+$flashcardsDAO = new FlashcardsDAO($PDOX, $p);
 
 $OUTPUT->header();
 
@@ -18,8 +22,11 @@ if ( $USER->instructor ) {
 
     $setId = $_GET["SetID"];
 
-    $cardsInSet = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$setId." order by CardNum;");
-    $set = $PDOX->rowDie("select * from {$p}flashcards_set where SetID=".$setId.";");
+    $cardsInSet = $flashcardsDAO->getCardsInSet($setId);
+
+    usort($cardsInSet, array('FlashcardUtils', 'compareCardNum'));
+
+    $set = $flashcardsDAO->getFlashcardSetById($setId);
 
     $Total = count($cardsInSet);
 

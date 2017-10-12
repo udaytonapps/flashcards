@@ -1,23 +1,25 @@
 <?php
 require_once "../../config.php";
+require_once('../dao/FlashcardsDAO.php');
 
 use \Tsugi\Core\LTIX;
+use \Flashcards\DAO\FlashcardsDAO;
 
 // Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
 $p = $CFG->dbprefix;
 
-$UserName=$_SESSION["UserName"];
-$CourseName = $_POST["CourseName"];
-$CardSetName = $_POST["CardSetName"];
+$flashcardsDAO = new FlashcardsDAO($PDOX, $p);
 
-$CardSetName = str_replace("'", "&#39;", $CardSetName);
+$CardSetName = str_replace("'", "&#39;", $_POST["CardSetName"]);
 
 if ( $USER->instructor ) {
 
-    $PDOX->queryDie("INSERT INTO {$p}flashcards_set (UserName, CourseName, CardSetName) VALUES ( '$UserName', '$CourseName', '$CardSetName')",
-        array(':UserName' => $UserName, ':CourseName' => $CourseName, ':CardSetName' => $CardSetName)  );
+    $newSetId = $flashcardsDAO->createCardSet($USER->id, $CONTEXT->id, $CardSetName);
 
-    header( 'Location: '.addSession('../AllCards.php?SetID='.$PDOX->lastInsertId()) ) ;
+    header( 'Location: '.addSession('../AllCards.php?SetID='.$newSetId) ) ;
+} else {
+    // student so send back to index
+    header( 'Location: '.addSession('../index.php') ) ;
 }

@@ -1,14 +1,19 @@
 <?php
 require_once "../../config.php";
+require_once "../dao/FlashcardsDAO.php";
 
 use \Tsugi\Core\LTIX;
+use \Flashcards\DAO\FlashcardsDAO;
 
 // Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
 $p = $CFG->dbprefix;
 
+$flashcardsDAO = new FlashcardsDAO($PDOX, $p);
+
 $SetID=$_GET["SetID"];
+
 $CardID=$_GET["CardID"];
 $CardNum = $_GET["CardNum"];
 
@@ -22,11 +27,12 @@ if ($Flag){
 
 if ( $USER->instructor ) {
 
-    $oldCard = $PDOX->rowDie("SELECT CardID FROM {$p}flashcards where CardNum=".$NewCardNum." AND SetID=".$SetID);
-    $NewCardID = $oldCard["CardID"];
+    $swapCard = $flashcardsDAO->getCardBySetAndNumber($SetID, $NewCardNum);
 
-    $PDOX->queryDie("update {$p}flashcards set CardNum=".$CardNum." where CardID=".$NewCardID);    // 5-> 6
-    $PDOX->queryDie("update {$p}flashcards set CardNum=".$NewCardNum." where CardID=".$CardID);    // 6-> 5
+    $flashcardsDAO->updateCardNumber($swapCard["CardID"], $CardNum);
+    $flashcardsDAO->updateCardNumber($CardID, $swapCard["CardNum"]);
 
     header( 'Location: '.addSession('../AllCards.php?SetID='.$SetID) ) ;
+} else {
+    header( 'Location: '.addSession('../index.php') ) ;
 }

@@ -1,12 +1,16 @@
 <?php
 require_once "../config.php";
+require_once "dao/FlashcardsDAO.php";
 
 use \Tsugi\Core\LTIX;
+use \Flashcards\DAO\FlashcardsDAO;
 
 // Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
 $p = $CFG->dbprefix;
+
+$flashcardsDAO = new FlashcardsDAO($PDOX, $p);
 
 $OUTPUT->header();
 
@@ -20,9 +24,9 @@ if ( $USER->instructor ) {
 
     include("menu.php");
 
-    $allSets = $PDOX->allRowsDie("select * from {$p}flashcards_set where CourseName='".$_SESSION["CourseName"]."' order by CardSetName;");
+    $allSets = $flashcardsDAO->getAllSetsForSiteSorted($CONTEXT->id);
 
-    $previousLink = $PDOX->rowDie("SELECT * FROM {$p}flashcards_link WHERE link_id ='".$linkId."';");
+    $previousLink = $flashcardsDAO->getLinkedSet($linkId);
 
     echo('<form action="actions/LinkToSet_Submit.php" method="post">
 

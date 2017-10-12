@@ -1,28 +1,17 @@
 <?php
 require_once "../config.php";
+require_once "dao/FlashcardsDAO.php";
+require_once "util/FlashcardUtils.php";
 
 use \Tsugi\Core\LTIX;
+use \Flashcards\DAO\FlashcardsDAO;
 
 // Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
 $p = $CFG->dbprefix;
 
-// Comparator for card number
-function compareCardNum2($a, $b) {
-
-    if ($a["CardNum2"] == $b["CardNum2"]) {
-        return 0;
-    }
-    return ($a["CardNum2"] < $b["CardNum2"]) ? -1 : 1;
-}
-function compareCardNum($a, $b) {
-
-    if ($a["CardNum"] == $b["CardNum"]) {
-        return 0;
-    }
-    return ($a["CardNum"] < $b["CardNum"]) ? -1 : 1;
-}
+$flashcardsDAO = new FlashcardsDAO($PDOX, $p);
 
 $OUTPUT->header();
 
@@ -73,15 +62,15 @@ if(isset($_GET["ReviewMode"])){
 $setId = $_GET["SetID"];
 $_SESSION["SetID"] = $setId;
 
-$cardsInSet = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$setId.";");
+$cardsInSet = $flashcardsDAO->getCardsInSet($setId);
 
 if($CardNum == 0){
-    $theCard = $PDOX->rowDie("SELECT * FROM {$p}flashcards where SetID=".$setId." AND CardNum2=".$CardNum2.";");
+    $theCard = $flashcardsDAO->getCardBySetAndNumber2($setId, $CardNum2);
 } else {
-    $theCard = $PDOX->rowDie("SELECT * FROM {$p}flashcards where SetID=".$setId." AND CardNum=".$CardNum.";");
+    $theCard = $flashcardsDAO->getCardBySetAndNumber($setId, $CardNum);
 }
 
-$cardKnown = $PDOX->rowDie("SELECT * FROM {$p}flashcards_review WHERE UserId = '".$USER->id."' AND SetId ='".$setId."' AND CardId = '".$theCard["CardID"]."';");
+$cardKnown = $flashcardsDAO->cardKnown($USER->id, $setId, $theCard["CardID"]);
 
 if($isReviewMode == 1) {
 
@@ -91,7 +80,7 @@ if($isReviewMode == 1) {
         header( 'Location: '.addSession('PlayCard.php?CardNum='.++$CardNum.'&CardNum2=0&Flag=A&SetID='.$setId.'&Shortcut='.$shortCut.'&ReviewMode='.$isReviewMode) ) ;
     }
 
-    $knownCards = $PDOX->allRowsDie("SELECT CardID FROM {$p}flashcards_review WHERE UserId = '".$USER->id."' AND SetId = '".$setId."';");
+    $knownCards = $flashcardsDAO->getKnownCards($USER->id, $setId);
 
     $knownCardIds = array();
 
@@ -114,12 +103,12 @@ if($isReviewMode == 1 && $Total == 0) {
     header( 'Location: '.addSession('FinishedReview.php?SetID='.$setId.'&Shortcut='.$shortCut) ) ;
 }
 
-$set = $PDOX->rowDie("select * from {$p}flashcards_set where SetID=".$setId.";");
+$set = $flashcardsDAO->getFlashcardSetById($setId);
 
 if ($CardNum == 0) {
     // We are in "shuffle" mode
 
-    usort($cardsInSet, "compareCardNum2");
+    usort($cardsInSet, array('FlashcardUtils', 'compareCardNum2'));
 
     $Next = 0;
     $Prev = 0;
@@ -151,7 +140,7 @@ if ($CardNum == 0) {
     $percentComplete = $position / $Total * 100;
 } else {
 
-    usort($cardsInSet, "compareCardNum");
+    usort($cardsInSet, array('FlashcardUtils', 'compareCardNum'));
 
     reset($cardsInSet);
     $position = 1;

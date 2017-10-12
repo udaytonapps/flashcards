@@ -1,25 +1,28 @@
 <?php
 require_once "../../config.php";
 require_once "../util/PHPExcel.php";
+require_once "../dao/FlashcardsDAO.php";
+require_once "../util/FlashcardUtils.php";
 
 use \Tsugi\Core\LTIX;
+use \Flashcards\DAO\FlashcardsDAO;
 
 // Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
 $p = $CFG->dbprefix;
 
-// Comparator for student last name used for sorting roster
-function compareStudentsLastName($a, $b) {
-    return strcmp($a["person_name_family"], $b["person_name_family"]);
-}
+$flashcardsDAO = new FlashcardsDAO($PDOX, $p);
 
 if ( $USER->instructor ) {
 
     $setId = $_GET["SetID"];
 
-    $set = $PDOX->rowDie("select * from {$p}flashcards_set where SetID=".$setId.";");
-    $cardsInSet = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$setId.";");
+    $set = $flashcardsDAO->getFlashcardSetById($setId);
+
+    $cardsInSet = $flashcardsDAO->getCardsInSet($setId);
+
+    usort($cardsInSet, array('FlashcardUtils', 'compareCardNum'));
 
     $totalCards = count($cardsInSet);
 
@@ -34,12 +37,13 @@ if ( $USER->instructor ) {
 
         $rosterData = $GLOBALS['ROSTER']->data;
 
-        usort($rosterData, "compareStudentsLastName");
+        usort($rosterData, array('FlashcardUtils', 'compareStudentsLastName'));
 
         $columnIterator = $exportFile->getActiveSheet()->getColumnIterator();
         $columnIterator->next();
 
-        for($x = 1; $x <= $totalCards; $x++) {
+        $x = 1;
+        foreach($cardsInSet as $card) {
 
             $exportFile->getActiveSheet()->setCellValue($columnIterator->current()->getColumnIndex().'1', 'Card '.$x);
 
@@ -52,9 +56,9 @@ if ( $USER->instructor ) {
                     $exportFile->getActiveSheet()
                         ->setCellValue('A'.$rowCounter, $student["person_name_family"].', '.$student["person_name_given"]);
 
-                    $completed = $PDOX->rowDie("SELECT count(*) as Count FROM {$p}flashcards_activity WHERE FullName = '".$student["person_name_full"]."' AND SetID = '".$setId."' AND CardNum = '".$x."';");
+                    $completed = $flashcardsDAO->activityExists($card["CardID"], $student["user_id"]);
 
-                    if($completed["Count"] == 1) {
+                    if($completed) {
                         $exportFile->getActiveSheet()->setCellValue($columnIterator->current()->getColumnIndex().$rowCounter, 'X');
                     }
 
@@ -62,9 +66,9 @@ if ( $USER->instructor ) {
                 }
             }
             $columnIterator->next();
+
+            ++$x;
         }
-
-
 
         $exportFile->getActiveSheet()->setTitle('Flashcards Activity');
 
@@ -79,6 +83,7 @@ if ( $USER->instructor ) {
         header ('Pragma: public'); // HTTP/1.0
         $objWriter = PHPExcel_IOFactory::createWriter($exportFile, 'Excel5');
         $objWriter->save('php://output');
-        exit;
     }
 }
+
+exit;

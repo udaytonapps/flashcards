@@ -1,7 +1,9 @@
 <?php
 require_once "../../config.php";
+require_once("../dao/FlashcardsDAO.php");
 
 use \Tsugi\Core\LTIX;
+use \Flashcards\DAO\FlashcardsDAO;
 
 // Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
@@ -9,13 +11,10 @@ $LAUNCH = LTIX::requireData();
 $p = $CFG->dbprefix;
 
 $setId = $_SESSION["SetID"];
-$CardNum = $_SESSION["CardNum"];
-$UserName = $_SESSION["UserName"];
-$FullName = $_SESSION["FullName"];
+$cardId = $_SESSION["CardID"];
 
-$activity = $PDOX->rowDie("SELECT * FROM {$p}flashcards_activity where SetID='".$setId."' AND CardNum='".$CardNum."' AND UserName='".$UserName."';");
+$flashcardsDAO = new FlashcardsDAO($PDOX, $p);
 
-if (!$activity) {
-    $PDOX->queryDie("INSERT INTO {$p}flashcards_activity (SetID, CardNum, UserName, FullName) VALUES ( $setId, $CardNum, '$UserName', '$FullName' );",
-        array(':SetID' => $setId, ':CardNum' => $CardNum, ':UserName' => $UserName,':FullName' => $FullName)  );
-}
+$flashcardsDAO->updateActivityForUserCard($setId, $cardId, $USER->id);
+
+exit;

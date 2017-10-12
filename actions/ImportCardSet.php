@@ -1,57 +1,36 @@
 <?php
 require_once "../../config.php";
+require_once "../dao/FlashcardsDAO.php";
 
 use \Tsugi\Core\LTIX;
+use \Flashcards\DAO\FlashcardsDAO;
 
 // Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
 $p = $CFG->dbprefix;
 
+$flashcardsDAO = new FlashcardsDAO($PDOX, $p);
+
 if ( $USER->instructor ) {
 
-    $SetID1 = $_GET["SetID"];
-    $UserName = $_SESSION["UserName"];
-    $CourseName = $_SESSION["CourseName"];
-    $Total3=0;
+    $oSetId = $_GET["SetID"];
 
-    $oCardSet = $PDOX->rowDie("SELECT * FROM {$p}flashcards_set where SetID=".$SetID1.";");
+    $oCardSet = $flashcardsDAO->getFlashcardSetById($oSetId);
 
     $CardSetName = $oCardSet["CardSetName"];
 
-    $PDOX->queryDie("INSERT INTO {$p}flashcards_set (UserName,CourseName, CardSetName) VALUES ( '$UserName','$CourseName', '$CardSetName' );",
-        array(':UserName' => $UserName,':CourseName' => $CourseName,':CardSetName' => $CardSetName)  );
+    $newSetId = $flashcardsDAO->createCardSet($USER->id, $CONTEXT->id, $CardSetName);
 
+    $oCardsInSet = $flashcardsDAO->getCardsInSet($oSetId);
 
-    // for new SetID
+    usort($oCardsInSet, array('FlashcardUtils', 'compareCardNum'));
 
-    $rows2 = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards_set where CourseName='".$CourseName."' AND CardSetName='".$CardSetName."';");
-    foreach ( $rows2 as $row ) {
-        $SetID2 = $row["SetID"];
+    $cardNum = 1;
+    foreach ($oCardsInSet as $card) {
+        $flashcardsDAO->createCard($newSetId, $cardNum, $card["SideA"], $card["SideB"], $card["TypeA"], $card["TypeB"]);
+        ++$cardNum;
     }
-
-    // get flashcard
-
-    $CardSideA = array();
-    $CardSideB = array();
-    $CardTypeA = array();
-    $CardTypeB = array();
-    $CardNumSet=array();
-
-    $rows3 = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$SetID1.";");
-    foreach ( $rows3 as $row ) {
-        $Total3++;
-        array_push($CardSideA, $row["SideA"]);
-        array_push($CardSideB, $row["SideB"]);
-        array_push($CardTypeA, $row["TypeA"]);
-        array_push($CardTypeB, $row["TypeB"]);
-        array_push($CardNumSet, $row["CardNum"]);
-    }
-
-    for ($x = 0; $x < $Total3; $x++) {
-        $PDOX->queryDie("INSERT INTO {$p}flashcards (SetID, CardNum, SideA, SideB, TypeA, TypeB) VALUES ( $SetID2, $CardNumSet[$x], '$CardSideA[$x]', '$CardSideB[$x]', '$CardTypeA[$x]', '$CardTypeB[$x]' )",
-            array(':SetID' => $SetID2, ':CardNum' => $CardNum, ':SideA' => $SideA, ':SideB' => $SideB, ':TypeA' => $TypeA, ':TypeB' => $TypeB));
-    }
-
-    header( 'Location: '.addSession('../index.php') ) ;
 }
+
+header( 'Location: '.addSession('../index.php') ) ;

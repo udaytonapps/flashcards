@@ -10,9 +10,7 @@ echo('
     </nav>
 ');
 
-$visibleSets = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards_set where CourseName='".$_SESSION["CourseName"]."' AND Active=1 AND Visible=1;");
-
-echo('<h3>Welcome, '.$_SESSION["FullName"].'</h3>');
+$visibleSets = $flashcardsDAO->getAllVisibleSetsForSiteSorted($CONTEXT->id);
 
 if (count($visibleSets) == 0) {
     echo('<p><em>There are currently no available flashcard sets for this course.</em></p>');
@@ -21,7 +19,7 @@ if (count($visibleSets) == 0) {
     echo('<div class="row">');
 
     foreach ( $visibleSets as $set ) {
-        $cards = $PDOX->allRowsDie("select * from {$p}flashcards where SetID=".$set["SetID"].";");
+        $cards = $flashcardsDAO->getCardsInSet($set["SetID"]);
         if (count($cards) > 0) {
             $cardsPile = ' cards-pile';
         } else {

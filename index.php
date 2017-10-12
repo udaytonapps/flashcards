@@ -21,7 +21,6 @@ $OUTPUT->bodyStart();
 
 $_SESSION["UserName"] = $USER->email;
 $_SESSION["FullName"] = $USER->displayname;
-$_SESSION["CourseName"] = $CONTEXT->title;
 
 if ( $USER->instructor ) {
 
@@ -31,8 +30,8 @@ if ( $USER->instructor ) {
 }else{ // student
 
     $linkId = $LINK->id;
-    $shortcut = $flashcardsDAO->getShortCutSetIdForLink($linkId);
-    if (isset($shortcut["SetId"])) {
+    $shortcut = $flashcardsDAO->getShortcutSetIdForLink($linkId);
+    if (isset($shortcut["SetID"])) {
         header( 'Location: '.addSession('PlayCard.php?SetID='.$shortcut["SetId"].'&CardNum=1&CardNum2=0&Flag=A&Shortcut=1"') ) ;
     } else {
         include("student-home.php");

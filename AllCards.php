@@ -1,12 +1,17 @@
 <?php
 require_once "../config.php";
+require_once('dao/FlashcardsDAO.php');
+require_once('util/FlashcardUtils.php');
 
 use \Tsugi\Core\LTIX;
+use \Flashcards\DAO\FlashcardsDAO;
 
 // Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
 $p = $CFG->dbprefix;
+
+$flashcardsDAO = new FlashcardsDAO($PDOX, $p);
 
 $OUTPUT->header();
 
@@ -18,8 +23,9 @@ if ( $USER->instructor ) {
 
     $setId = $_GET["SetID"];
 
-    $cardsInSet = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$setId." order by CardNum;");
-    $set = $PDOX->rowDie("select * from {$p}flashcards_set where SetID=".$setId.";");
+    $cardsInSet = $flashcardsDAO->getCardsInSet($setId);
+
+    $set = $flashcardsDAO->getFlashcardSetById($setId);
 
     $Total = count($cardsInSet);
 
@@ -34,7 +40,7 @@ if ( $USER->instructor ) {
         <div class="row cardRow">
 
         <p>
-            <a class="btn btn-success" href="AddCard.php?SetID='.$_GET["SetID"].'"><span class="fa fa-plus"></span> Add New Card</a>        
+            <a class="btn btn-success" href="AddCard.php?SetID='.$setId.'"><span class="fa fa-plus"></span> Add New Card</a>        
         </p>
         
         <h2>Cards in "'.$set["CardSetName"].'" <span class="badge">'.$Total.' Cards</span></h2>
@@ -43,6 +49,7 @@ if ( $USER->instructor ) {
     if ($Total == 0) {
         echo('<p><em>There are currently no cards in this set.</em></p>');
     } else {
+        usort($cardsInSet, array('FlashcardUtils', 'compareCardNum'));
         $cardNum = 1;
         foreach ( $cardsInSet as $row ) {
 

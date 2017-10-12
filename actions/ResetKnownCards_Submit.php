@@ -1,17 +1,21 @@
 <?php
 require_once "../../config.php";
+require_once "../dao/FlashcardsDAO.php";
 
 use \Tsugi\Core\LTIX;
+use \Flashcards\DAO\FlashcardsDAO;
 
 // Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
 $p = $CFG->dbprefix;
 
-$setId = $_SESSION["SetID"];
-$userId = $USER->id;
+$flashcardsDAO = new FlashcardsDAO($PDOX, $p);
 
-$PDOX->queryDie("DELETE FROM {$p}flashcards_review WHERE UserId = '".$userId."' AND SetId = '".$setId."';");
+$userId = $USER->id;
+$setId = $_SESSION["SetID"];
+
+$flashcardsDAO->deleteAllCardReviews($userId, $setId);
 
 if(isset($_GET["ReviewMode"])){
     $isReviewMode = $_GET["ReviewMode"];

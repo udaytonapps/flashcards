@@ -1,27 +1,37 @@
 <?php
 require_once "../../config.php";
+require_once "../dao/FlashcardsDAO.php";
+require_once "../util/FlashcardUtils.php";
 
 use \Tsugi\Core\LTIX;
+use \Flashcards\DAO\FlashcardsDAO;
 
 // Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
 $p = $CFG->dbprefix;
 
+$flashcardsDAO = new FlashcardsDAO($PDOX, $p);
+
 $SetID=$_GET["SetID"];
 $CardID=$_GET["CardID"];
 
 if ( $USER->instructor ) {
 
-    $PDOX->queryDie("DELETE FROM {$p}flashcards where CardID=".$CardID.";");
+    $flashcardsDAO->deleteCard($CardID);
 
-    $remainingCards = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$_GET["SetID"]." order by CardNum;");
+    $remainingCards = $flashcardsDAO->getCardsInSet($SetID);
+
+    usort($remainingCards, array('FlashcardUtils', 'compareCardNum'));
 
     $CardNum = 0;
     foreach ( $remainingCards as $card ) {
         $CardNum++;
-        $PDOX->queryDie("update {$p}flashcards set CardNum=".$CardNum." where CardID=".$card["CardID"].";");
+        $flashcardsDAO->updateCardNumber($card["CardID"], $CardNum);
     }
 
     header( 'Location: '.addSession('../AllCards.php?SetID='.$SetID) ) ;
+} else {
+    // student so send back to index
+    header( 'Location: '.addSession('../index.php') ) ;
 }

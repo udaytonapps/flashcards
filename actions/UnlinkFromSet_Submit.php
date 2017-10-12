@@ -1,18 +1,22 @@
 <?php
 require_once "../../config.php";
+require_once "../dao/FlashcardsDAO.php";
 
 use \Tsugi\Core\LTIX;
+use \Flashcards\DAO\FlashcardsDAO;
 
 // Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
 $p = $CFG->dbprefix;
 
+$flashcardsDAO = new FlashcardsDAO($PDOX, $p);
+
 if ( $USER->instructor ) {
 
     $linkId = $LINK->id;
 
-    $PDOX->queryDie("DELETE FROM {$p}flashcards_link WHERE link_id = '".$linkId."';");
-
-    header( 'Location: '.addSession('../index.php') ) ;
+    $flashcardsDAO->deleteLink($linkId);
 }
+
+header( 'Location: '.addSession('../index.php') ) ;

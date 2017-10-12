@@ -1,17 +1,17 @@
 <?php
 require_once "../config.php";
+require_once "dao/FlashcardsDAO.php";
+require_once "util/FlashcardUtils.php";
 
 use \Tsugi\Core\LTIX;
+use \Flashcards\DAO\FlashcardsDAO;
 
 // Retrieve the launch data if present
 $LAUNCH = LTIX::requireData();
 
 $p = $CFG->dbprefix;
 
-// Comparator for student last name used for sorting roster
-function compareStudentsLastName($a, $b) {
-    return strcmp($a["person_name_family"], $b["person_name_family"]);
-}
+$flashcardsDAO = new FlashcardsDAO($PDOX, $p);
 
 $OUTPUT->header();
 
@@ -25,7 +25,7 @@ if ( $USER->instructor ) {
 
     $setId = $_GET["SetID"];
 
-    $set = $PDOX->rowDie("select * from {$p}flashcards_set where SetID=".$setId.";");
+    $set = $flashcardsDAO->getFlashcardSetById($setId);
 
     echo('
             <ul class="breadcrumb">
@@ -34,7 +34,7 @@ if ( $USER->instructor ) {
             </ul>
         ');
 
-    $cardsInSet = $PDOX->allRowsDie("SELECT * FROM {$p}flashcards where SetID=".$setId.";");
+    $cardsInSet = $flashcardsDAO->getCardsInSet($setId);
     $totalCards = count($cardsInSet);
 
     $hasRosters = LTIX::populateRoster(false);
@@ -59,7 +59,7 @@ if ( $USER->instructor ) {
                 echo('<div class="row">
                     <div class="col-sm-4">'.$student["person_name_family"].', '.$student["person_name_given"].'</div>');
 
-                $numberCompleted = $PDOX->rowDie("SELECT count(distinct(CardNum)) as Count FROM {$p}flashcards_activity WHERE FullName = '".$student["person_name_full"]."' AND SetID = '".$setId."';");
+                $numberCompleted = $flashcardsDAO->getNumberOfSeenCards($student["user_id"], $setId);
 
                 $percentComplete = $numberCompleted["Count"] / $totalCards * 100;
 
