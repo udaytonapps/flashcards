@@ -19,6 +19,9 @@ if ( $USER->instructor ) {
     // Delete all cards
     $flashcardsDAO->deleteAllCardsInSet($SetID);
 
+    // Delete all activity for the cards in the set
+    $flashcardsDAO->deleteAllActivityForSet($SetID);
+
     // Delete set
     $flashcardsDAO->deleteCardSet($SetID);
 

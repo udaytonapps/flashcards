@@ -20,6 +20,8 @@ if ( $USER->instructor ) {
 
     $flashcardsDAO->deleteCard($CardID);
 
+    $flashcardsDAO->deleteActivityForCard($CardID);
+
     $remainingCards = $flashcardsDAO->getCardsInSet($SetID);
 
     usort($remainingCards, array('FlashcardUtils', 'compareCardNum'));

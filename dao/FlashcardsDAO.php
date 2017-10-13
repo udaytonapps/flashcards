@@ -115,8 +115,20 @@ class FlashcardsDAO {
         $this->PDOX->queryDie($query, $arr);
     }
 
+    function deleteActivityForCard($cardId) {
+        $query = "DELETE FROM {$this->p}flashcards_activity WHERE CardID = :cardId;";
+        $arr = array(':cardId' => $cardId);
+        $this->PDOX->queryDie($query, $arr);
+    }
+
     function deleteAllCardsInSet($setId) {
         $query = "DELETE FROM {$this->p}flashcards WHERE SetID = :setId;";
+        $arr = array(':setId' => $setId);
+        $this->PDOX->queryDie($query, $arr);
+    }
+
+    function deleteAllActivityForSet($setId) {
+        $query = "DELETE FROM {$this->p}flashcards_activity WHERE SetID = :setId;";
         $arr = array(':setId' => $setId);
         $this->PDOX->queryDie($query, $arr);
     }
