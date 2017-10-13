@@ -7,7 +7,7 @@ $linkId = $LINK->id;
 $shortcut = $flashcardsDAO->getShortcutSetIdForLink($linkId);
 
 if (isset($shortcut["SetID"])) {
-    $shortcutSet = $flashcardsDAO->getFlashcardSetById($shortcut["SetId"]);
+    $shortcutSet = $flashcardsDAO->getFlashcardSetById($shortcut["SetID"]);
     echo('<br /><small><span class="fa fa-link"></span> This instance of Flashcards is linked to <a href="PlayCard.php?SetID='.$shortcut["SetID"].'&CardNum=1&CardNum2=0&Flag=A">'.$shortcutSet["CardSetName"].'</a>.</small>');
 }
 

@@ -12,8 +12,9 @@ class FlashcardsDAO {
     }
 
     function getShortcutSetIdForLink($link_id) {
-        $query = "SELECT SetId FROM {$this->p}flashcards_link WHERE link_id = '".$link_id."';";
-        return $this->PDOX->rowDie($query);
+        $query = "SELECT * FROM {$this->p}flashcards_link WHERE link_id = :linkId;";
+        $arr = array(':linkId' => $link_id);
+        return $this->PDOX->rowDie($query, $arr);
     }
 
     function getFlashcardSetById($setId) {
