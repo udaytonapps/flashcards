@@ -56,7 +56,13 @@ if ( $USER->instructor ) {
                     $exportFile->getActiveSheet()
                         ->setCellValue('A'.$rowCounter, $student["person_name_family"].', '.$student["person_name_given"]);
 
-                    $completed = $flashcardsDAO->activityExists($card["CardID"], $student["user_id"]);
+                    $userId = $flashcardsDAO->getTsugiUserId($student["user_id"]);
+
+                    if (!$userId) {
+                        $completed = false;
+                    } else {
+                        $completed = $flashcardsDAO->activityExists($card["CardID"], $userId);
+                    }
 
                     if($completed) {
                         $exportFile->getActiveSheet()->setCellValue($columnIterator->current()->getColumnIndex().$rowCounter, 'X');

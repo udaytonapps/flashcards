@@ -100,7 +100,7 @@ $courses = $flashcardsDAO->getAllSitesForUserWithACardSet($USER->id, $CONTEXT->i
 
 echo('
     
-    <h3><button class="btn btn-primary ');
+    <h3><button class="btn btn-default ');
             if(count($courses)==0) {
                 echo('disabled');
             }

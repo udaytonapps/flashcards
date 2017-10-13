@@ -1,6 +1,7 @@
 <?php
 require_once "../config.php";
 require_once "dao/FlashcardsDAO.php";
+require_once "util/FlashcardUtils.php";
 
 use \Tsugi\Core\LTIX;
 use \Flashcards\DAO\FlashcardsDAO;
@@ -23,8 +24,6 @@ if ( $USER->instructor ) {
     $setId = $_GET["SetID"];
 
     $cardsInSet = $flashcardsDAO->getCardsInSet($setId);
-
-    usort($cardsInSet, array('FlashcardUtils', 'compareCardNum'));
 
     $set = $flashcardsDAO->getFlashcardSetById($setId);
 

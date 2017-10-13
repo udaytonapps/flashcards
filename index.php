@@ -32,7 +32,12 @@ if ( $USER->instructor ) {
     $linkId = $LINK->id;
     $shortcut = $flashcardsDAO->getShortcutSetIdForLink($linkId);
     if (isset($shortcut["SetID"])) {
-        header( 'Location: '.addSession('PlayCard.php?SetID='.$shortcut["SetId"].'&CardNum=1&CardNum2=0&Flag=A&Shortcut=1"') ) ;
+        $theSet = $flashcardsDAO->getFlashcardSetById($shortcut["SetID"]);
+        if ($theSet["Active"] == 1) {
+            header( 'Location: '.addSession('PlayCard.php?SetID='.$shortcut["SetID"].'&CardNum=1&CardNum2=0&Flag=A&Shortcut=1"') ) ;
+        } else {
+            echo('<h3>Flashcards</h3><p><em>This flashcard set is not currently available.</em></p>');
+        }
     } else {
         include("student-home.php");
     }

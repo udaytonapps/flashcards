@@ -18,13 +18,15 @@ class FlashcardsDAO {
     }
 
     function getFlashcardSetById($setId) {
-        $query = "SELECT * FROM {$this->p}flashcards_set WHERE SetID = '".$setId."';";
-        return $this->PDOX->rowDie($query);
+        $query = "SELECT * FROM {$this->p}flashcards_set WHERE SetID = :setId;";
+        $arr = array(':setId' => $setId);
+        return $this->PDOX->rowDie($query, $arr);
     }
 
     function getAllSetsForSiteSorted($context_id) {
-        $query = "SELECT * FROM {$this->p}flashcards_set WHERE context_id='".$context_id."' ORDER BY CardSetName;";
-        return $this->PDOX->allRowsDie($query);
+        $query = "SELECT * FROM {$this->p}flashcards_set WHERE context_id = :contextId ORDER BY CardSetName;";
+        $arr = array(':contextId' => $context_id);
+        return $this->PDOX->allRowsDie($query, $arr);
     }
 
     function getAllVisibleSetsForSiteSorted($context_id) {
@@ -34,13 +36,15 @@ class FlashcardsDAO {
     }
 
     function getAllSitesForUserWithACardSet($userId, $context_id) {
-        $query = "SELECT DISTINCT context_id FROM {$this->p}flashcards_set where UserID='".$userId."' AND context_id !='".$context_id."' AND Visible=1";
-        return $this->PDOX->allRowsDie($query);
+        $query = "SELECT DISTINCT context_id FROM {$this->p}flashcards_set where UserID = :userId AND context_id != :contextId AND Visible=1";
+        $arr = array(':userId' => $userId, ':contextId' => $context_id);
+        return $this->PDOX->allRowsDie($query, $arr);
     }
 
     function getCardsInSet($setId) {
-        $query = "SELECT * FROM {$this->p}flashcards where SetID='".$setId."';";
-        return $this->PDOX->allRowsDie($query);
+        $query = "SELECT * FROM {$this->p}flashcards WHERE SetID = :setId;";
+        $arr = array(':setId' => $setId);
+        return $this->PDOX->allRowsDie($query, $arr);
     }
 
     function createCardSet($userId, $context_id, $cardSetName) {
@@ -143,6 +147,17 @@ class FlashcardsDAO {
         $arr = array(':contextId' => $context_id);
         $context = $this->PDOX->rowDie($query, $arr);
         return $context["title"];
+    }
+
+    function getTsugiUserId($userId) {
+        $query = "SELECT * FROM {$this->p}lti_user WHERE user_key = :userId;";
+        $arr = array(':userId' => $userId);
+        $ltiUser = $this->PDOX->rowDie($query, $arr);
+        if ($ltiUser !== false) {
+            return $ltiUser["user_id"];
+        } else {
+            return false;
+        }
     }
 
     function activityExists($cardId, $userId) {

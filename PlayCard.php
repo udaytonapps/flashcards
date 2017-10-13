@@ -172,7 +172,7 @@ if ($CardNum == 0) {
     $percentComplete = $position / $Total * 100;
 }
 
-$_SESSION["CardId"] = $theCard["CardID"];
+$_SESSION["CardID"] = $theCard["CardID"];
 
     if ($shortCut == 0) {
         echo('
@@ -196,7 +196,7 @@ $_SESSION["CardId"] = $theCard["CardID"];
                 <p>
                     <a class="btn btn-primary" href="actions/Shuffle.php?SetID='.$set["SetID"].'&Shortcut='.$shortCut.'&ReviewMode='.$isReviewMode.'"><span class="fa fa-random"></span> Shuffle Cards</a>                
                 </p>
-                <p>');
+                <div class="review-mode">');
 
                 if($isReviewMode == 1) {
                     echo('<a class="btn btn-success" href="PlayCard.php?SetID='.$set["SetID"].'&CardNum=1&CardNum2=0&Flag=A&ReviewMode=0&Shortcut='.$shortCut.'"><span class="fa fa-check-square-o"></span> Review Mode</a>');
@@ -204,7 +204,9 @@ $_SESSION["CardId"] = $theCard["CardID"];
                     echo('<a class="btn btn-default" href="PlayCard.php?SetID='.$set["SetID"].'&CardNum=1&CardNum2=0&Flag=A&ReviewMode=1&Shortcut='.$shortCut.'"><span class="fa fa-square-o"></span> Review Mode</a>');
                 }
 
-                echo(' <a id="reset-cards" href="actions/ResetKnownCards_Submit.php?ReviewMode='.$isReviewMode.'&Shortcut='.$shortCut.'" class="pull-right"><span class="fa fa-refresh"></span> Reset Cards</a></p>
+                echo('<br /><a id="reset-cards" href="actions/ResetKnownCards_Submit.php?ReviewMode='.$isReviewMode.'&Shortcut='.$shortCut.'"><span class="fa fa-refresh"></span> Reset Cards</a>
+                      <p id="review-mode-info"><em>You can toggle "Review Mode" on or off to see only cards that you don\'t already know. Use the "Reset Cards" button to see all of the cards in Review Mode.</em></p>
+                </div>
             </div>
             
             <div class="col-sm-9" id="play-card-column">    

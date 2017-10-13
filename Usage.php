@@ -59,7 +59,13 @@ if ( $USER->instructor ) {
                 echo('<div class="row">
                     <div class="col-sm-4">'.$student["person_name_family"].', '.$student["person_name_given"].'</div>');
 
-                $numberCompleted = $flashcardsDAO->getNumberOfSeenCards($student["user_id"], $setId);
+                $userId = $flashcardsDAO->getTsugiUserId($student["user_id"]);
+
+                if (!$userId) {
+                    $numberCompleted = 0;
+                } else {
+                    $numberCompleted = $flashcardsDAO->getNumberOfSeenCards($userId, $setId);
+                }
 
                 $percentComplete = $numberCompleted / $totalCards * 100;
 

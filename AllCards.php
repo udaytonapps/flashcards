@@ -81,7 +81,7 @@ if ( $USER->instructor ) {
                     </div>
                     <div class="panel-body">
                         <div class="col-sm-6 sideA">
-                            <h4>Side A</h4>
+                            <h5 class="text-muted">Side A</h5>
         ');
 
             if($row["TypeA"] == "Image" || $row["TypeA"] == "mp3" || $row["TypeA"] == "Video") {
@@ -93,7 +93,7 @@ if ( $USER->instructor ) {
             echo('
                         </div>
                         <div class="col-sm-6 sideB">
-                            <h4>Side B</h4>
+                            <h5 class="text-muted">Side B</h5>
                             '.$row["SideB"].'
                         </div>
                     </div>

@@ -35,7 +35,7 @@ if ( $USER->instructor ) {
 
                 <input name="CourseName" id="CourseName" type="hidden" value="<?php echo($_SESSION["CourseName"]); ?>"/>
 
-                <input class="btn btn-primary" type="submit" value="Add Flashcard Set" />
+                <input class="btn btn-primary" type="submit" value="Add Card Set" />
             </div>
         </div>
 

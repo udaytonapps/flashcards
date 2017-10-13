@@ -101,6 +101,15 @@ h3.card-order a {
 p.addCard {
     margin: 0 0 10px 15px;
 }
+@media (min-width: 768px) {
+    div.sideA {
+        border-right: 1px solid #ccc;
+    }
+    div.sideB {
+        margin-left: -1px;
+        border-left: 1px solid #ccc;
+    }
+}
 /* Student */
 .student-card-count {
     font-size: 1em;
@@ -159,10 +168,23 @@ div.play-card .video {
     width: 100%;
     height: 100%;
 }
-#toggle-review-card {
-    position: absolute;
-    left: 24px;
-    font-size: 1.5em;
+div.review-mode {
+    padding: .5em;
+    border: 1px solid #ccc;
+    text-align: center;
+}
+div.review-mode > a.btn {
+    margin: 1em 0;
+}
+#review-mode-info {
+    margin-top: .5em;
+}
+@media (min-width: 768px) {
+    #toggle-review-card {
+        position: absolute;
+        left: 24px;
+        font-size: 1.4em;
+    }
 }
 #toggle-review-card:hover, #toggle-review-card:active, #toggle-review-card:focus {
     text-decoration: none;
