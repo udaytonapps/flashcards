@@ -21,7 +21,11 @@ $OUTPUT->bodyStart();
 if(isset($_GET["Shortcut"])) {
     $shortCut = $_GET["Shortcut"];
 } else {
-    $shortCut = 0;
+    if (isset($_SESSION["Shortcut"])) {
+        $shortCut = $_SESSION["Shortcut"];
+    } else {
+        $shortCut = 0;
+    }
 }
 
 
@@ -41,8 +45,12 @@ if ( $USER->instructor ) {
     }
 }
 
-$setId = $_GET["SetID"];
-$_SESSION["SetID"] = $setId;
+if (isset($_GET["SetID"])) {
+    $setId = $_GET["SetID"];
+    $_SESSION["SetID"] = $setId;
+} else {
+    $setId = $_SESSION["SetID"];
+}
 
 $set = $flashcardsDAO->getFlashcardSetById($setId);
 

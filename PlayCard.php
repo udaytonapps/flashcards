@@ -264,7 +264,7 @@ $_SESSION["CardID"] = $theCard["CardID"];
                 echo('</span> I know this card</a>
                         
                 <div class="prev-next text-center">
-                    <a href="PlayCard.php?SetID='.$setId.'&CardNum='.$Prev.'&CardNum2='.$Prev2.'&Flag=A&Shortcut='.$shortCut.'&ReviewMode='.$isReviewMode.'" ');if($Prev == 0 && $Prev2 == 0){echo('class="disabled"');} echo('>
+                    <a id="prev-link" href="PlayCard.php?SetID='.$setId.'&CardNum='.$Prev.'&CardNum2='.$Prev2.'&Flag=A&Shortcut='.$shortCut.'&ReviewMode='.$isReviewMode.'" ');if($Prev == 0 && $Prev2 == 0){echo('class="disabled"');} echo('>
                         <span class="fa fa-3x fa-chevron-circle-left"></span>
                     </a>
                     <a href="javascript:void(0);" id="flip-link">

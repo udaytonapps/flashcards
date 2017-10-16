@@ -36,6 +36,12 @@ var toggleReviewCard = function() {
             toggleIcon.toggleClass('fa-square-o');
             toggleIcon.toggleClass('fa-check-square-o');
             reviewCard.blur();
+            var nextDisabled = $('#next-link').hasClass("disabled");
+            var prevDisabled = $('#prev-link').hasClass("disabled");
+            if (nextDisabled && prevDisabled) {
+                window.location.href = "FinishedReview.php?PHPSESSID="+sess;
+            }
         }
     });
+
 };
