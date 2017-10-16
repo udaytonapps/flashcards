@@ -13,9 +13,7 @@ $p = $CFG->dbprefix;
 $flashcardsDAO = new FlashcardsDAO($PDOX, $p);
 
 $setId = $_SESSION["SetID"];
-
-$cardId = $_SESSION["CardId"];
-
+$cardId = $_SESSION["CardID"];
 $userId = $USER->id;
 
 $flashcardsDAO->toggleReview($userId, $setId, $cardId);

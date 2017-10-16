@@ -186,7 +186,7 @@ class FlashcardsDAO {
             $query = "DELETE FROM {$this->p}flashcards_review WHERE UserID = :userId AND SetID = :setId AND CardID = :cardId;";
         }
         $arr = array(':userId' => $userId, ':setId' => $setId, ':cardId' => $cardId);
-        $this->PDOX->rowDie($query, $arr);
+        $this->PDOX->queryDie($query, $arr);
     }
 
     function cardKnown($userId, $setId, $cardId) {
