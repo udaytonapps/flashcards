@@ -1,38 +1,50 @@
 <?php
-
-require_once "config.php";
+require_once('../config.php');
+require_once('dao/FlashcardsDAO.php');
 
 use \Tsugi\Core\LTIX;
+use \Flashcards\DAO\FlashcardsDAO;
 
 // Retrieve the launch data if present
-$LTI = LTIX::requireData();
+$LAUNCH = LTIX::requireData();
+
 $p = $CFG->dbprefix;
-$displayname = $USER->displayname;
+
+$flashcardsDAO = new FlashcardsDAO($PDOX, $p);
 
 // Start of the output
 $OUTPUT->header();
-?>
-    <!-- Our main css file that overrides default Tsugi styling -->
-    <link rel="stylesheet" type="text/css" href="styles/main.css">
-<?php
+
+include("tool-header.html");
+
 $OUTPUT->bodyStart();
 
-$OUTPUT->flashMessages();
+$_SESSION["UserName"] = $USER->email;
+$_SESSION["FullName"] = $USER->displayname;
 
-$OUTPUT->welcomeUserCourse();
+if ( $USER->instructor ) {
 
-echo("<pre>Global Tsugi Objects:\n\n");
-var_dump($USER);
-var_dump($CONTEXT);
-var_dump($LINK);
+    include("menu.php");
+    include("instructor-home.php");
 
-echo("\n<hr/>\n");
-echo("Session data (low level):\n");
-echo($OUTPUT->safe_var_dump($_SESSION));
+}else{ // student
+
+    $linkId = $LINK->id;
+    $shortcut = $flashcardsDAO->getShortcutSetIdForLink($linkId);
+    if (isset($shortcut["SetID"])) {
+        $theSet = $flashcardsDAO->getFlashcardSetById($shortcut["SetID"]);
+        if ($theSet["Active"] == 1) {
+            header( 'Location: '.addSession('PlayCard.php?SetID='.$shortcut["SetID"].'&CardNum=1&CardNum2=0&Flag=A&Shortcut=1"') ) ;
+        } else {
+            echo('<h3>Flashcards</h3><p><em>This flashcard set is not currently available.</em></p>');
+        }
+    } else {
+        include("student-home.php");
+    }
+}
 
 $OUTPUT->footerStart();
-?>
-    <!-- Our main javascript file for tool functions -->
-    <script src="scripts/main.js" type="text/javascript"></script>
-<?php
+
+include("tool-footer.html");
+
 $OUTPUT->footerEnd();
