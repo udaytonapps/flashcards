@@ -17,7 +17,8 @@ $CardSetName = str_replace("'", "&#39;", $_POST["CardSetName"]);
 if ( $USER->instructor ) {
 
     $newSetId = $flashcardsDAO->createCardSet($USER->id, $CONTEXT->id, $CardSetName);
-
+    $linkId = $LINK->id;
+    $flashcardsDAO->saveOrUpdateLink($newSetId, $linkId);
     header( 'Location: '.addSession('../AllCards.php?SetID='.$newSetId) ) ;
 } else {
     // student so send back to index
