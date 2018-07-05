@@ -32,7 +32,7 @@ if ( $USER->instructor ) {
     $flashcardsDAO->updateCardNumber($swapCard["CardID"], $CardNum);
     $flashcardsDAO->updateCardNumber($CardID, $swapCard["CardNum"]);
 
-    header( 'Location: '.addSession('../AllCards.php?SetID='.$SetID) ) ;
+    header( 'Location: '.addSession('../index.php') ) ;
 } else {
     header( 'Location: '.addSession('../index.php') ) ;
 }

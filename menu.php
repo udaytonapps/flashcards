@@ -1,13 +1,8 @@
 
 <?php
 $menu = array(
-    'AddCardSet.php' => '<span class="fa-stack small">
-                            <span class="fa fa-square fa-stack-2x" style="top:-6px;"></span>
-                            <span class="fa fa-square-o fa-stack-2x" style="top:2px;left:-8px;"></span>
-                            <span class="fa fa-inverse fa-plus fa-stack-1x" style="top:-6px;"></span>
-                         </span>
-                         <span class="menu-with-icon">Create Card Set</span>',
-    'LinkToSet.php' => '<span class="fa fa-external-link"></span> Link To Card Set'
+
+    //'LinkToSet.php' => '<span class="fa fa-external-link"></span> Link To Card Set'
 );
 ?>
 

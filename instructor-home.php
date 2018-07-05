@@ -94,6 +94,15 @@ echo('<div class="row">');
 
 echo('</div>');
 
+
+/* New Set */
+
+echo('
+    
+    <h3><a href="AddCardSet.php" class="btn btn-default" >Create Card Set</a></h3>
+    
+');
+
 /* Import from site */
 
 $courses = $flashcardsDAO->getAllSitesForUserWithACardSet($USER->id, $CONTEXT->id);

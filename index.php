@@ -25,7 +25,14 @@ $_SESSION["FullName"] = $USER->displayname;
 if ( $USER->instructor ) {
 
     include("menu.php");
-    include("instructor-home.php");
+
+    $linkId = $LINK->id;
+    $set = $flashcardsDAO->getShortcutSetIdForLink($linkId);
+    if (isset($set["SetID"])) {
+        include("AllCards.php");
+    } else {
+        include("instructor-home.php");
+    }
 
 }else{ // student
 
@@ -39,7 +46,8 @@ if ( $USER->instructor ) {
             echo('<h3>Flashcards</h3><p><em>This flashcard set is not currently available.</em></p>');
         }
     } else {
-        include("student-home.php");
+        //include("student-home.php");
+        echo('<h3>Flashcards</h3><p><em>This flashcard set is not currently available.</em></p>');
     }
 }
 
