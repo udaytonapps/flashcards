@@ -37,7 +37,7 @@ if ( $USER->instructor ) {
     echo('
         <ul class="breadcrumb">
             <li><a href="index.php">All Card Sets</a></li>
-            <li><a href="index.php">'.$set["CardSetName"].'</a></li>
+            <li><a href="AllCards.php?SetID=' .$setId.'">'.$set["CardSetName"].'</a></li>
             <li>Add New Card</li>
         </ul>
     ');
@@ -84,7 +84,7 @@ if ( $USER->instructor ) {
                 <input  type="hidden" name="CardNum" value="<?php echo $Next; ?>"/>
 
                 <input type="submit" value="Add Card" class="btn btn-primary">
-                <a href="index.php" class="btn btn-danger">Cancel</a>
+                <a href="AllCards.php?SetID=<?php echo $_GET["SetID"];?>" class="btn btn-danger">Cancel</a>
 
             </div>
         </div>

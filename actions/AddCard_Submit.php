@@ -26,7 +26,7 @@ if ( $USER->instructor ) {
 
     $flashcardsDAO->createCard($SetID, $CardNum, $SideA, $SideB, $TypeA, $TypeB);
 
-    header( 'Location: '.addSession('../index.php') ) ;
+    header( 'Location: '.addSession('../AllCards.php?SetID='.$SetID) ) ;
 } else {
     // student so send back to index
     header( 'Location: '.addSession('../index.php') ) ;

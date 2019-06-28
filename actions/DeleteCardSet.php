@@ -16,10 +16,6 @@ $SetID=$_GET["SetID"];
 
 if ( $USER->instructor ) {
 
-    $linkId = $LINK->id;
-
-    $flashcardsDAO->deleteLink($linkId);
-
     // Delete all cards
     $flashcardsDAO->deleteAllCardsInSet($SetID);
 
