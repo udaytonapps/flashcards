@@ -21,7 +21,11 @@ $OUTPUT->bodyStart();
 
 if ( $USER->instructor ) {
 
-    $setId = $_GET["SetID"];
+    $linkId = $LINK->id;
+
+    $linkSet = $flashcardsDAO->getShortcutSetIdForLink($linkId);
+
+    $setId = $linkSet["SetID"];
 
     $cardsInSet = $flashcardsDAO->getCardsInSet($setId);
 
@@ -29,21 +33,63 @@ if ( $USER->instructor ) {
 
     $Total = count($cardsInSet);
 
-    include("menu.php");
+
+    if($set["Active"] == 0) {
+        $flag = 1;
+        $panelClass = 'default';
+        $pubAction = 'Unpublished';
+    } else {
+        $flag = 0;
+        $panelClass = 'success';
+        $pubAction = 'Published';
+    }
 
     echo('
         <ul class="breadcrumb">
             <li><a href="index.php">All Card Sets</a></li>
             <li>' .$set["CardSetName"].'</li>
         </ul>
+       
+        </div>
+        
+        
+        
         
         <div class="row cardRow">
-
-        <p>
-            <a class="btn btn-success" href="AddCard.php?SetID='.$setId.'"><span class="fa fa-plus"></span> Add New Card</a>        
-        </p>
+            <div class="col-md-8">
+                <p>
+                    <a class="btn btn-success" href="AddCard.php?SetID='.$setId.'"><span class="fa fa-plus"></span> Add New Card</a>        
+                </p>
+                
+                <h2>Cards in "'.$set["CardSetName"].'" <span class="badge">'.$Total.' Cards</span></h2>
+            </div>
+        <div class="col-md-1 text-center">
+            <a href="PlayCard.php?SetID='.$set["SetID"].'&CardNum=1&CardNum2=0&Flag=A" ');if($Total == 0){echo('class="disabled"');}echo('>
+                <span class="fa fa-2x fa-th-large"></span>
+                <br />
+                <small>Student View</small>
+            </a>
+        </div>
+        <div class="col-md-1 text-center">
+            <a href="Usage.php?SetID='.$set["SetID"].'" ');if($Total == 0){echo('class="disabled"');}echo('>
+                <span class="fa fa-2x fa-bar-chart"></span>
+                <br />
+                <small>Usage</small>
+            </a>
+        </div>
+        <div class="col-md-1 text-center">
+            <a href="Settings.php?SetID='.$set["SetID"].'">
+                <span class="fa fa-2x fa-cog"></span>
+                <br />
+                <small>Settings</small>
+            </a>
+        </div>
+        <div class="col-md-1">
+            <a class="btn btn-'.$panelClass.' pull-right publish-link" href="actions/Publish.php?SetID='.$set["SetID"].'&Flag='.$flag.'">'.$pubAction.'</a>
+        </div>
+        </div>
+        <div class="row cardRow">
         
-        <h2>Cards in "'.$set["CardSetName"].'" <span class="badge">'.$Total.' Cards</span></h2>
     ');
 
     if ($Total == 0) {
@@ -64,14 +110,14 @@ if ( $USER->instructor ) {
         ');
             if($cardNum != 1) {
                 echo('
-                            <a href="actions/Move.php?CardID=' . $row["CardID"] . '&CardNum=' . $row["CardNum"] . '&SetID=' . $_GET["SetID"] . '&Flag=1">
+                            <a href="actions/Move.php?CardID=' . $row["CardID"] . '&CardNum=' . $row["CardNum"] . '&SetID=' . $setId . '&Flag=1">
                                 <span class="fa fa-chevron-circle-up"></span>
                             </a>
                 ');
             }
             if($cardNum != $Total) {
                 echo('
-                            <a href="actions/Move.php?CardID=' . $row["CardID"] . '&CardNum=' . $row["CardNum"] . '&SetID=' . $_GET["SetID"] . '&Flag=0">
+                            <a href="actions/Move.php?CardID=' . $row["CardID"] . '&CardNum=' . $row["CardNum"] . '&SetID=' . $setId . '&Flag=0">
                                 <span class="fa fa-chevron-circle-down"></span>
                             </a>
                 ');
