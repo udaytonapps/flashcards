@@ -236,7 +236,7 @@ $_SESSION["CardID"] = $theCard["CardID"];
                         </div>
                         <span class="h3 text-muted"><span class="fa fa-undo"></span> Click to flip</span>
                     </div>
-                    <div class="back" style="visibility: hidden;">
+                    <div class="back">
                         <span class="h4 text-muted">Side B</span>
                         <div class="play-card text-center">
                             <span>');
@@ -282,7 +282,7 @@ $OUTPUT->footerStart();
 
 include("tool-footer.html");
 
-echo('<script src="scripts/jquery.flip.min.js" type="text/javascript"></script>');
+echo('<script src="scripts/jquery.flip.js" type="text/javascript"></script>');
 echo('<script src="scripts/cardflipper.js" type="text/javascript"></script>');
 
 $OUTPUT->footerEnd();
