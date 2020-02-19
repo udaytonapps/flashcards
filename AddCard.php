@@ -101,7 +101,8 @@ include("tool-footer.html");
             allowMultiple: false,
             allowFileEncode: true,
             required: false,
-            instantUpload: false
+            instantUpload: false,
+            labelIdle: 'Drag & Drop your photo here or <span class="filepond--label-action"> Browse </span>'
 
         });
 
@@ -110,7 +111,8 @@ include("tool-footer.html");
             allowMultiple: false,
             allowFileEncode: true,
             required: false,
-            instantUpload: false
+            instantUpload: false,
+            labelIdle: 'Drag & Drop your photo here or <span class="filepond--label-action"> Browse </span>'
 
         });
 

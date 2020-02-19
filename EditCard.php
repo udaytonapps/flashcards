@@ -230,7 +230,8 @@ include("tool-footer.html");
             allowFileEncode: true,
             required: false,
             instantUpload: false,
-            labelTapToUndo: 'tap to remove'
+            labelTapToUndo: 'tap to remove',
+            labelIdle: 'Drag & Drop your photo here or <span class="filepond--label-action"> Browse </span>'
             // onaddfilestart: (file) => { isLoadingCheck1(); },
             // onprocessfile: (file) => { isLoadingCheck1(); }
 
@@ -279,7 +280,8 @@ include("tool-footer.html");
             allowFileEncode: true,
             required: false,
             instantUpload: false,
-            labelTapToUndo: 'tap to remove'
+            labelTapToUndo: 'tap to remove',
+            labelIdle: 'Drag & Drop your photo here or <span class="filepond--label-action"> Browse </span>'
             // onaddfilestart: (file) => { isLoadingCheck2(); },
             // onprocessfile: (file) => { isLoadingCheck2(); }
 

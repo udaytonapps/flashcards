@@ -3,6 +3,7 @@ require_once "../config.php";
 require_once('dao/FlashcardsDAO.php');
 require_once('util/FlashcardUtils.php');
 
+use Tsugi\Blob\BlobUtil;
 use \Tsugi\Core\LTIX;
 use \Flashcards\DAO\FlashcardsDAO;
 
@@ -16,6 +17,16 @@ $flashcardsDAO = new FlashcardsDAO($PDOX, $p);
 $OUTPUT->header();
 
 include("tool-header.html");
+
+?>
+<style>
+    .img-fit {
+        object-fit: scale-down;
+        max-width: 100%;
+        max-height: 75px;
+    }
+</style>
+<?php
 
 $OUTPUT->bodyStart();
 
@@ -86,15 +97,71 @@ if ( $USER->instructor ) {
 
             if($row["TypeA"] == "Image" || $row["TypeA"] == "mp3" || $row["TypeA"] == "Video") {
                 echo('<a href="'.$row["SideA"].'" target="_blank">'.$row["SideA"].'</a>');
-            } else {
+            } else if($row['TypeA'] == 'Text') {
                 echo($row["SideA"]);
+            } else {
+                if($row["MediaA"] != null && $row["SideA"] != null) {
+                    ?>
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($row["MediaA"])) ?>" class="img-fit">
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <?php echo $row["SideA"] ?>
+                        </div>
+                    </div>
+                    <?php
+                } else if($row["MediaA"] != null) {
+                    ?>
+                    <div class="row">
+                        <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($row["MediaA"])) ?>" class="img-fit">
+                    </div>
+                    <?php
+                } else {
+                    ?>
+                    <div class="row">
+                        <?php echo $row["SideA"] ?>
+                    </div>
+                    <?php
+                }
             }
 
             echo('
                         </div>
                         <div class="col-sm-6 sideB">
-                            <h5 class="text-muted">Side B</h5>
-                            '.$row["SideB"].'
+                            <h5 class="text-muted">Side B</h5>');
+            if($row["TypeB"] == "Image") {
+                echo('<a href="'.$row["SideB"].'" target="_blank">'.$row["SideB"].'</a>');
+            } else if($row['TypeB'] == 'Text') {
+                echo($row["SideB"]);
+            } else {
+                if($row["MediaB"] != null && $row["SideB"] != null) {
+                    ?>
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($row["MediaB"])) ?>" class="img-fit">
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <?php echo $row["SideB"] ?>
+                        </div>
+                    </div>
+                    <?php
+                } else if($row["MediaB"] != null) {
+                    ?>
+                    <div class="row">
+                        <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($row["MediaB"])) ?>" class="img-fit">
+                    </div>
+                    <?php
+                } else {
+                    ?>
+                    <div class="row">
+                        <?php echo $row["SideB"] ?>
+                    </div>
+                    <?php
+                }
+            }
+
+            echo('
                         </div>
                     </div>
                 </div>
