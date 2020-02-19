@@ -66,9 +66,9 @@ class FlashcardsDAO {
         $this->PDOX->queryDie($query, $arr);
     }
 
-    function createCard($setId, $cardNum, $sideA, $sideB, $typeA, $typeB) {
-        $query = "INSERT INTO {$this->p}flashcards (SetID, CardNum, SideA, SideB, TypeA, TypeB) VALUES (:setId, :cardNum, :sideA, :sideB, :typeA, :typeB);";
-        $arr = array(':setId' => $setId, ':cardNum' => $cardNum, ':sideA' => $sideA, ':sideB' => $sideB, ':typeA' => $typeA, ':typeB' => $typeB);
+    function createCard($setId, $cardNum, $sideA, $mediaA, $sideB, $mediaB, $typeA, $typeB) {
+        $query = "INSERT INTO {$this->p}flashcards (SetID, CardNum, SideA, MediaA, SideB, MediaB, TypeA, TypeB) VALUES (:setId, :cardNum, :sideA, :mediaA, :sideB, :mediaB, :typeA, :typeB);";
+        $arr = array(':setId' => $setId, ':cardNum' => $cardNum, ':sideA' => $sideA, ':mediaA' => $mediaA, ':sideB' => $sideB, ':mediaB' => $mediaB, ':typeA' => $typeA, ':typeB' => $typeB);
         $this->PDOX->queryDie($query, $arr);
         return $this->PDOX->lastInsertId();
     }
@@ -91,9 +91,9 @@ class FlashcardsDAO {
         return $this->PDOX->rowDie($query, $arr);
     }
 
-    function updateCard($cardId, $sideA, $sideB, $typeA, $typeB) {
-        $query = "UPDATE {$this->p}flashcards set SideA = :sideA, SideB = :sideB, TypeA = :typeA, TypeB = :typeB where CardID = :cardId;";
-        $arr = array(':sideA' => $sideA, ':sideB' => $sideB, ':typeA' => $typeA, ':typeB' => $typeB, ':cardId' => $cardId);
+    function updateCard($cardId, $sideA, $mediaA, $sideB, $mediaB, $typeA, $typeB) {
+        $query = "UPDATE {$this->p}flashcards set SideA = :sideA, MediaA = :mediaA, SideB = :sideB, MediaB = :mediaB, TypeA = :typeA, TypeB = :typeB where CardID = :cardId;";
+        $arr = array(':sideA' => $sideA, ':mediaA' => $mediaA, ':sideB' => $sideB, ':mediaB' => $mediaB, ':typeA' => $typeA, ':typeB' => $typeB, ':cardId' => $cardId);
         $this->PDOX->queryDie($query, $arr);
     }
 

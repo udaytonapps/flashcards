@@ -53,31 +53,19 @@ if ( $USER->instructor ) {
 
             <div class="col-sm-offset-1 col-sm-8">
                 <div class="form-group">
-                    <label class="control-label" for="TypeA">Side A Type</label>
-                    <select class="form-control" id="TypeA" name="TypeA">
-                        <option value="Text" selected>Text</option>
-                        <option value="Image">Image</option>
-                        <option value="mp3">Audio (mp3)</option>
-                        <option value="Video">YouTube / Warpwire</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
                     <label class="control-label" for="SideA">Side A</label>
-                    <textarea class="form-control" name="SideA" id="SideA" rows="5" autofocus required></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label class="control-label" for="TypeB">Side B Type</label>
-                    <select class="form-control" id="TypeB" name="TypeB">
-                        <option value="Text" selected>Text</option>
-                        <option value="Image">Image</option>
-                    </select>
+                    <div class="photo-box">
+                        <input type="file" class="filepond1" name="filepond1" data-max-file-size="6MB" />
+                    </div>
+                    <textarea class="form-control" name="SideA" id="SideA" rows="5" autofocus></textarea>
                 </div>
 
                 <div class="form-group">
                     <label class="control-label" for="SideB">Side B</label>
-                    <textarea class="form-control" name="SideB" id="SideB" rows="5" required></textarea>
+                    <div class="photo-box">
+                        <input type="file" class="filepond2" name="filepond2" data-max-file-size="6MB" />
+                    </div>
+                    <textarea class="form-control" name="SideB" id="SideB" rows="5"></textarea>
                 </div>
 
                 <input type="hidden" name="SetID" value="<?php echo $_GET["SetID"];?>"/>
@@ -96,7 +84,37 @@ if ( $USER->instructor ) {
 }
 
 $OUTPUT->footerStart();
-
 include("tool-footer.html");
+
+?>
+    <script>
+
+        FilePond.registerPlugin(
+            FilePondPluginFileEncode,
+            FilePondPluginFileValidateSize,
+            FilePondPluginFileValidateType,
+            FilePondPluginImagePreview
+        );
+
+        const pond1 = FilePond.create( document.querySelector('.filepond1'), {
+            acceptedFileTypes: ['image/*'],
+            allowMultiple: false,
+            allowFileEncode: true,
+            required: false,
+            instantUpload: false
+
+        });
+
+        const pond2 = FilePond.create( document.querySelector('.filepond2'), {
+            acceptedFileTypes: ['image/*'],
+            allowMultiple: false,
+            allowFileEncode: true,
+            required: false,
+            instantUpload: false
+
+        });
+
+    </script>
+<?php
 
 $OUTPUT->footerEnd();

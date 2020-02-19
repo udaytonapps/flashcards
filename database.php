@@ -43,7 +43,9 @@ $DATABASE_INSTALL = array(
     CardNum     INTEGER NULL,
     CardNum2    INTEGER NULL,
     SideA       varchar(1500) NULL,
+    MediaA      varchar(1000) NULL,
     SideB       varchar(1500) NULL,
+    MediaB      varchar(1000) NULL,
     File        varchar(255) DEFAULT '0',
     Ref1        varchar(255) NULL,
     Ref2        varchar(255) NULL,
@@ -51,8 +53,8 @@ $DATABASE_INSTALL = array(
     Youtube     varchar(1000) NULL,
     Editor      varchar(20) NULL,
     Modified    datetime NULL,
-    TypeA       varchar(5) DEFAULT 'Text',
-    TypeB       varchar(5) DEFAULT 'Text',
+    TypeA       varchar(5) DEFAULT 'Media',
+    TypeB       varchar(5) DEFAULT 'Media',
   
     CONSTRAINT `{$CFG->dbprefix}flashcards_ibfk_1`
         FOREIGN KEY (`SetID`)

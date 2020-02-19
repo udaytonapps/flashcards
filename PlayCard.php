@@ -3,6 +3,7 @@ require_once "../config.php";
 require_once "dao/FlashcardsDAO.php";
 require_once "util/FlashcardUtils.php";
 
+use Tsugi\Blob\BlobUtil;
 use \Tsugi\Core\LTIX;
 use \Flashcards\DAO\FlashcardsDAO;
 
@@ -16,6 +17,23 @@ $flashcardsDAO = new FlashcardsDAO($PDOX, $p);
 $OUTPUT->header();
 
 include("tool-header.html");
+
+?>
+<style>
+    .both {
+        margin: 5px;
+        height: 100%;
+    }
+    .col-row {
+        width: 100%;
+        height: 100%;
+    }
+    .img-fit {
+        object-fit: scale-down;
+        max-width: 100%;
+    }
+</style>
+<?php
 
 $OUTPUT->bodyStart();
 
@@ -182,8 +200,7 @@ $_SESSION["CardID"] = $theCard["CardID"];
             </ul>
         ');
     }
-
-    echo('
+        echo('
         <div class="row cardRow">
             <div class="col-sm-3 play-menu">
                 <h3>'.$set["CardSetName"].'</h3>
@@ -198,13 +215,13 @@ $_SESSION["CardID"] = $theCard["CardID"];
                 </p>
                 <div class="review-mode">');
 
-                if($isReviewMode == 1) {
-                    echo('<a class="btn btn-success" href="PlayCard.php?SetID='.$set["SetID"].'&CardNum=1&CardNum2=0&Flag=A&ReviewMode=0&Shortcut='.$shortCut.'"><span class="fa fa-check-square-o"></span> Review Mode</a>');
-                } else {
-                    echo('<a class="btn btn-default" href="PlayCard.php?SetID='.$set["SetID"].'&CardNum=1&CardNum2=0&Flag=A&ReviewMode=1&Shortcut='.$shortCut.'"><span class="fa fa-square-o"></span> Review Mode</a>');
-                }
+        if($isReviewMode == 1) {
+            echo('<a class="btn btn-success" href="PlayCard.php?SetID='.$set["SetID"].'&CardNum=1&CardNum2=0&Flag=A&ReviewMode=0&Shortcut='.$shortCut.'"><span class="fa fa-check-square-o"></span> Review Mode</a>');
+        } else {
+            echo('<a class="btn btn-default" href="PlayCard.php?SetID='.$set["SetID"].'&CardNum=1&CardNum2=0&Flag=A&ReviewMode=1&Shortcut='.$shortCut.'"><span class="fa fa-square-o"></span> Review Mode</a>');
+        }
 
-                echo('<br /><a id="reset-cards" href="actions/ResetKnownCards_Submit.php?ReviewMode='.$isReviewMode.'&Shortcut='.$shortCut.'"><span class="fa fa-refresh"></span> Reset Cards</a>
+        echo('<br /><a id="reset-cards" href="actions/ResetKnownCards_Submit.php?ReviewMode='.$isReviewMode.'&Shortcut='.$shortCut.'"><span class="fa fa-refresh"></span> Reset Cards</a>
                       <p id="review-mode-info"><em>You can toggle "Review Mode" on or off to see only cards that you don\'t already know. Use the "Reset Cards" button to see all of the cards in Review Mode.</em></p>
                 </div>
             </div>
@@ -213,39 +230,80 @@ $_SESSION["CardID"] = $theCard["CardID"];
                 <div id="play-card-container">
                     <div class="front">
                         <span class="h4 text-muted">Side A</span>
-                        <div class="play-card text-center">
-                            <span>');
-                                if ($theCard["TypeA"] == "Image") {
-                                    echo('<img src="'.$theCard["SideA"].'">');
-                                } else if ($theCard["TypeA"] == "mp3") {
-                                    echo('<audio controls><source src="'.$theCard["SideA"].'" type="audio/mpeg">Your browser does not support the audio element.</audio>');
-                                } else if ($theCard["TypeA"] == "Video") {
-                                    $URL = $theCard["SideA"];
-                                    if (strpos($URL, 'youtube') == true) {
-                                        if (strpos($URL, 'embed') == false) {
-                                            $Youtube = $theCard["SideA"];
-                                            $Code = explode("=", $Youtube);
-                                            $URL = "https://www.youtube.com/embed/".$Code[1];
-                                        }
-                                    }
-                                    echo ('<div class="video-container"><iframe src="'.$URL.'" class="video" frameborder="0"></iframe></div>');
-                                } else {
-                                    echo($theCard["SideA"]);
-                                }
-                            echo('</span>
+                        <div class="play-card text-center">');
+        if ($theCard["TypeA"] == "Image") {
+            echo('<img src="'.$theCard['SideA'].'">');
+        } else if ($theCard["TypeA"] == "Media") {
+            if($theCard['MediaA'] != null && $theCard['SideA'] != null) {
+                ?>
+                <div class="row col-row">
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <div class="image-container">
+                            <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($theCard["MediaA"])) ?>" class="img-fit">
                         </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <span><?php echo $theCard["SideA"] ?></span>
+                    </div>
+                </div>
+
+                <?php
+            }  else if($theCard['MediaA'] != null) {
+                ?>
+                <div class="row">
+                    <div class="image-container">
+                        <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($theCard["MediaA"])) ?>" class="img-fit">
+                    </div>
+                </div>
+
+                <?php
+            } else {
+                echo('<span>'.$theCard["SideA"].'</span>');
+            }
+        } else if ($theCard["TypeA"] == "Text") {
+            echo('<span>'.$theCard["SideA"].'</span>');
+        }
+        echo('</div>
                         <span class="h3 text-muted"><span class="fa fa-undo"></span> Click to flip</span>
                     </div>
                     <div class="back">
                         <span class="h4 text-muted">Side B</span>
-                        <div class="play-card text-center">
-                            <span>');
-                                if ($theCard["TypeB"] == "Image") {
-                                    echo('<img src="'.$theCard["SideB"].'">');
-                                } else {
-                                    echo($theCard["SideB"]);
-                                }
-                            echo('</span></div>
+                        <div class="play-card text-center">');
+        if ($theCard["TypeB"] == "Image") {
+            echo('<img src="'.$theCard["SideB"].'">');
+        } else if ($theCard["TypeB"] == "Media") {
+            if($theCard['MediaB'] != null && $theCard['SideB'] != null) {
+                ?>
+                <div class="row col-row">
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <div class="image-container">
+                            <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($theCard["MediaB"])) ?>" class="img-fit">
+                        </div>
+                    </div>
+                    <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                        <div class="both">
+                            <span><?php echo $theCard["SideB"] ?></span>
+                        </div>
+                    </div>
+                </div>
+
+                <?php
+            } else if($theCard['MediaB'] != null) {
+                ?>
+                <div class="row">
+                    <div class="image-container">
+                        <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($theCard["MediaB"])) ?>" class="img-fit">
+                    </div>
+                </div>
+
+                <?php
+            } else {
+                echo('<span>'.$theCard["SideB"].'</span>');
+            }
+        } else if ($theCard["TypeB"] == "Text") {
+            echo('<span>'.$theCard["SideB"].'</span>');
+        }
+        echo('</div>
                         <span class="h3 text-muted"><span class="fa fa-undo"></span> Click to flip</span>
                     </div>                    
                 </div>
@@ -255,13 +313,13 @@ $_SESSION["CardID"] = $theCard["CardID"];
                 <a id="toggle-review-card" href="javascript:void(0)">
                 ');
 
-                    if(!$cardKnown) {
-                        echo('<span class="fa fa-square-o">');
-                    } else {
-                        echo('<span class="fa fa-check-square-o">');
-                    }
+        if(!$cardKnown) {
+            echo('<span class="fa fa-square-o">');
+        } else {
+            echo('<span class="fa fa-check-square-o">');
+        }
 
-                echo('</span> I know this card</a>
+        echo('</span> I know this card</a>
                         
                 <div class="prev-next text-center">
                     <a id="prev-link" href="PlayCard.php?SetID='.$setId.'&CardNum='.$Prev.'&CardNum2='.$Prev2.'&Flag=A&Shortcut='.$shortCut.'&ReviewMode='.$isReviewMode.'" ');if($Prev == 0 && $Prev2 == 0){echo('class="disabled"');} echo('>
