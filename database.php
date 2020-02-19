@@ -82,3 +82,23 @@ $DATABASE_INSTALL = array(
     PRIMARY KEY(UserID, SetID, CardID)
 ) ENGINE = InnoDB DEFAULT CHARSET=utf8")
 );
+
+$DATABASE_UPGRADE = function($oldversion) {
+    global $CFG, $PDOX;
+
+    if ( ! $PDOX->columnExists('MediaA', "{$CFG->dbprefix}flashcards") ) {
+        $sql= "ALTER TABLE {$CFG->dbprefix}flashcards ADD MediaA INTEGER NULL";
+        echo("Upgrading: ".$sql."<br/>\n");
+        error_log("Upgrading: ".$sql);
+        $q = $PDOX->queryDie($sql);
+    }
+
+    if ( ! $PDOX->columnExists('MediaB', "{$CFG->dbprefix}flashcards") ) {
+        $sql= "ALTER TABLE {$CFG->dbprefix}flashcards ADD MediaB INTEGER NULL";
+        echo("Upgrading: ".$sql."<br/>\n");
+        error_log("Upgrading: ".$sql);
+        $q = $PDOX->queryDie($sql);
+    }
+
+    return 202002191500;
+};
