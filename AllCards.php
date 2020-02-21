@@ -68,7 +68,7 @@ if ( $USER->instructor ) {
             <div class="col-md-6">
                 <div class="panel panel-default">
                     <div class="panel-heading list-card">
-                    <h3>
+                    <h3 style="margin:0;">
                     <div class="pull-right">
                         <a href="EditCard.php?CardID='.$row["CardID"].'&SetID='.$row["SetID"].'">
                         <span class="fa fa-fw fa-pencil" aria-hidden="true"></span>
