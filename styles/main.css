@@ -28,9 +28,6 @@ div.row {
 span.menu-with-icon {
     padding-left: 2.2em;
 }
-.panel-heading .deleteCard {
-    margin-left: 8px;
-}
 .panel-heading h3 > a {
     display: block;
     white-space: nowrap;

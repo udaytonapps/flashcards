@@ -68,6 +68,7 @@ if ( $USER->instructor ) {
             <div class="col-md-6">
                 <div class="panel panel-default">
                     <div class="panel-heading list-card">
+                    <h3>
                     <div class="pull-right">
                         <a href="EditCard.php?CardID='.$row["CardID"].'&SetID='.$row["SetID"].'">
                         <span class="fa fa-fw fa-pencil" aria-hidden="true"></span>
@@ -94,7 +95,7 @@ if ( $USER->instructor ) {
                         <span class="sr-only">Delete</span>
                         </a>
         ');
-            echo('</div><h3 class="card-order">'.$cardNum.'. </h3>
+            echo('</div> '.$cardNum.'. </h3>
                     </div>
                     <div class="panel-body">
                         <div class="col-sm-6 sideA">
