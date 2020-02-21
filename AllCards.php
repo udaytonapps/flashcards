@@ -66,13 +66,14 @@ if ( $USER->instructor ) {
 
             echo('
             <div class="col-md-6">
-                <div class="panel panel-info">
+                <div class="panel panel-default">
                     <div class="panel-heading list-card">
-                        <a class="btn btn-danger pull-right deleteCard" href="actions/DeleteCard.php?CardID='.$row["CardID"].'&SetID='.$row["SetID"].'" onclick="return ConfirmDeleteCard();"><span class="fa fa-trash-o"></span></a>
-                        <a class="btn btn-primary pull-right" href="EditCard.php?CardID='.$row["CardID"].'&SetID='.$row["SetID"].'">Edit</a>
-                        <h3 class="card-order">
-                            '.$cardNum.'. 
-        ');
+                    <div class="pull-right">
+                        <a href="EditCard.php?CardID='.$row["CardID"].'&SetID='.$row["SetID"].'">
+                        <span class="fa fa-fw fa-pencil" aria-hidden="true"></span>
+                        <span class="sr-only">Edit</span>
+                        </a>
+                        ');
             if($cardNum != 1) {
                 echo('
                             <a href="actions/Move.php?CardID=' . $row["CardID"] . '&CardNum=' . $row["CardNum"] . '&SetID=' . $_GET["SetID"] . '&Flag=1">
@@ -88,7 +89,12 @@ if ( $USER->instructor ) {
                 ');
             }
             echo('
-                        </h3>
+                        <a class="deleteCard" href="actions/DeleteCard.php?CardID='.$row["CardID"].'&SetID='.$row["SetID"].'" onclick="return ConfirmDeleteCard();">
+                        <span aria-hidden="true" class="fa fa-fw fa-trash"></span>
+                        <span class="sr-only">Delete</span>
+                        </a>
+        ');
+            echo('</div><h3 class="card-order">'.$cardNum.'. </h3>
                     </div>
                     <div class="panel-body">
                         <div class="col-sm-6 sideA">
