@@ -28,7 +28,7 @@ if ( $USER->instructor ) {
 
     $cardNum = 1;
     foreach ($oCardsInSet as $card) {
-        $flashcardsDAO->createCard($newSetId, $cardNum, $card["SideA"], $card["SideB"], $card["TypeA"], $card["TypeB"]);
+        $flashcardsDAO->createCard($newSetId, $cardNum, $card["SideA"], $car["MediaA"], $card["SideB"], $card["MediaB"], $card["TypeA"], $card["TypeB"]);
         ++$cardNum;
     }
 }
