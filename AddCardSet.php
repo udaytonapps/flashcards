@@ -33,7 +33,7 @@ if ( $USER->instructor ) {
                     <input id="CardSetName" name="CardSetName" class="form-control" required/>
                 </div>
 
-                <input name="CourseName" id="CourseName" type="hidden" value="<?php echo($_SESSION["CourseName"]); ?>"/>
+                <input name="CourseName" id="CourseName" type="hidden" value="<?php echo($CONTEXT->title); ?>"/>
 
                 <input class="btn btn-primary" type="submit" value="Add Card Set" />
             </div>
