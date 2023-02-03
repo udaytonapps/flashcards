@@ -1,6 +1,7 @@
 <?php
 require_once "../../config.php";
 require_once "../dao/FlashcardsDAO.php";
+require_once "../util/FlashcardUtils.php";
 
 use \Tsugi\Core\LTIX;
 use \Flashcards\DAO\FlashcardsDAO;
