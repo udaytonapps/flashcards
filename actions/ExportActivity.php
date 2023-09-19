@@ -31,11 +31,9 @@ if ( $USER->instructor ) {
     $exportFile->setActiveSheetIndex(0)
                     ->setCellValue('A1', 'Student Name');
 
-    $hasRosters = LTIX::populateRoster(false);
+    $rosterData = LTIX::getRosterMembers($LAUNCH);
 
-    if ($hasRosters) {
-
-        $rosterData = $GLOBALS['ROSTER']->data;
+    if ($rosterData) {
 
         usort($rosterData, array('FlashcardUtils', 'compareStudentsLastName'));
 
@@ -52,11 +50,11 @@ if ( $USER->instructor ) {
             foreach($rosterData as $student) {
 
                 // Only want students
-                if ($student["role"] == 'Learner') {
+                if (in_array($student->sakai_ext->sakai_role, ['Student', 'Learner'])) {
                     $exportFile->getActiveSheet()
-                        ->setCellValue('A'.$rowCounter, $student["person_name_family"].', '.$student["person_name_given"]);
+                        ->setCellValue('A'.$rowCounter, $student->family_name.', '.$student->given_name);
 
-                    $userId = $flashcardsDAO->getTsugiUserId($student["user_id"]);
+                    $userId = $flashcardsDAO->getTsugiUserId($student->lti11_legacy_user_id);
 
                     if (!$userId) {
                         $completed = false;

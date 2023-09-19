@@ -20,7 +20,7 @@ class FlashcardUtils {
 
     // Comparator for student last name used for sorting roster
     public static function compareStudentsLastName($a, $b) {
-        return strcmp($a["person_name_family"], $b["person_name_family"]);
+        return strcmp($a->family_name, $b->family_name);
     }
 
 }
