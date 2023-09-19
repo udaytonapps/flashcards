@@ -3,6 +3,7 @@ require_once "../config.php";
 require_once('dao/FlashcardsDAO.php');
 require_once('util/FlashcardUtils.php');
 
+use Tsugi\Blob\BlobUtil;
 use \Tsugi\Core\LTIX;
 use \Flashcards\DAO\FlashcardsDAO;
 
@@ -16,6 +17,16 @@ $flashcardsDAO = new FlashcardsDAO($PDOX, $p);
 $OUTPUT->header();
 
 include("tool-header.html");
+
+?>
+<style>
+    .img-fit {
+        object-fit: scale-down;
+        max-width: 100%;
+        max-height: 75px;
+    }
+</style>
+<?php
 
 $OUTPUT->bodyStart();
 
@@ -55,13 +66,15 @@ if ( $USER->instructor ) {
 
             echo('
             <div class="col-md-6">
-                <div class="panel panel-info">
+                <div class="panel panel-default">
                     <div class="panel-heading list-card">
-                        <a class="btn btn-danger pull-right deleteCard" href="actions/DeleteCard.php?CardID='.$row["CardID"].'&SetID='.$row["SetID"].'" onclick="return ConfirmDeleteCard();"><span class="fa fa-trash-o"></span></a>
-                        <a class="btn btn-primary pull-right" href="EditCard.php?CardID='.$row["CardID"].'&SetID='.$row["SetID"].'">Edit</a>
-                        <h3 class="card-order">
-                            '.$cardNum.'. 
-        ');
+                    <h3 style="margin:0;">
+                    <div class="pull-right">
+                        <a href="EditCard.php?CardID='.$row["CardID"].'&SetID='.$row["SetID"].'">
+                        <span class="fa fa-fw fa-pencil" aria-hidden="true"></span>
+                        <span class="sr-only">Edit</span>
+                        </a>
+                        ');
             if($cardNum != 1) {
                 echo('
                             <a href="actions/Move.php?CardID=' . $row["CardID"] . '&CardNum=' . $row["CardNum"] . '&SetID=' . $_GET["SetID"] . '&Flag=1">
@@ -77,7 +90,12 @@ if ( $USER->instructor ) {
                 ');
             }
             echo('
-                        </h3>
+                        <a class="deleteCard" href="actions/DeleteCard.php?CardID='.$row["CardID"].'&SetID='.$row["SetID"].'" onclick="return ConfirmDeleteCard();">
+                        <span aria-hidden="true" class="fa fa-fw fa-trash"></span>
+                        <span class="sr-only">Delete</span>
+                        </a>
+        ');
+            echo('</div> '.$cardNum.'. </h3>
                     </div>
                     <div class="panel-body">
                         <div class="col-sm-6 sideA">
@@ -86,15 +104,71 @@ if ( $USER->instructor ) {
 
             if($row["TypeA"] == "Image" || $row["TypeA"] == "mp3" || $row["TypeA"] == "Video") {
                 echo('<a href="'.$row["SideA"].'" target="_blank">'.$row["SideA"].'</a>');
-            } else {
+            } else if($row['TypeA'] == 'Text') {
                 echo($row["SideA"]);
+            } else {
+                if($row["MediaA"] != null && $row["SideA"] != null) {
+                    ?>
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($row["MediaA"], false)) ?>" class="img-fit">
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <?php echo $row["SideA"] ?>
+                        </div>
+                    </div>
+                    <?php
+                } else if($row["MediaA"] != null) {
+                    ?>
+                    <div class="row">
+                        <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($row["MediaA"], false)) ?>" class="img-fit">
+                    </div>
+                    <?php
+                } else {
+                    ?>
+                    <div class="row">
+                        <?php echo $row["SideA"] ?>
+                    </div>
+                    <?php
+                }
             }
 
             echo('
                         </div>
                         <div class="col-sm-6 sideB">
-                            <h5 class="text-muted">Side B</h5>
-                            '.$row["SideB"].'
+                            <h5 class="text-muted">Side B</h5>');
+            if($row["TypeB"] == "Image") {
+                echo('<a href="'.$row["SideB"].'" target="_blank">'.$row["SideB"].'</a>');
+            } else if($row['TypeB'] == 'Text') {
+                echo($row["SideB"]);
+            } else {
+                if($row["MediaB"] != null && $row["SideB"] != null) {
+                    ?>
+                    <div class="row">
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($row["MediaB"], false)) ?>" class="img-fit">
+                        </div>
+                        <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
+                            <?php echo $row["SideB"] ?>
+                        </div>
+                    </div>
+                    <?php
+                } else if($row["MediaB"] != null) {
+                    ?>
+                    <div class="row">
+                        <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($row["MediaB"], false)) ?>" class="img-fit">
+                    </div>
+                    <?php
+                } else {
+                    ?>
+                    <div class="row">
+                        <?php echo $row["SideB"] ?>
+                    </div>
+                    <?php
+                }
+            }
+
+            echo('
                         </div>
                     </div>
                 </div>

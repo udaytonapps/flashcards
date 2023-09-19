@@ -37,9 +37,9 @@ if ( $USER->instructor ) {
     $cardsInSet = $flashcardsDAO->getCardsInSet($setId);
     $totalCards = count($cardsInSet);
 
-    $hasRosters = LTIX::populateRoster(false);
+    $rosterData = LTIX::getRosterMembers($LAUNCH);
 
-    if ($hasRosters) {
+    if ($rosterData) {
 
         echo('<div class="row">
                   <div class="col-sm-12">
@@ -49,17 +49,15 @@ if ( $USER->instructor ) {
 
         echo('<div class="row"><div class="col-sm-4"><h4>Student Name</h4></div><div class="col-md-6"><h4>Progress</h4></div></div>');
 
-        $rosterData = $GLOBALS['ROSTER']->data;
-
         usort($rosterData, array('FlashcardUtils', 'compareStudentsLastName'));
 
         foreach($rosterData as $student) {
             // Only want students
-            if ($student["role"] == 'Learner') {
+            if (in_array($student->sakai_ext->sakai_role, ['Student', 'Learner'])) {
                 echo('<div class="row">
-                    <div class="col-sm-4">'.$student["person_name_family"].', '.$student["person_name_given"].'</div>');
+                    <div class="col-sm-4">'.$student->family_name.', '.$student->given_name.'</div>');
 
-                $userId = $flashcardsDAO->getTsugiUserId($student["user_id"]);
+                $userId = $flashcardsDAO->getTsugiUserId($student->lti11_legacy_user_id);
 
                 if (!$userId) {
                     $numberCompleted = 0;

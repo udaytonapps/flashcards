@@ -1,6 +1,7 @@
 <?php
 require_once "../../config.php";
 require_once "../dao/FlashcardsDAO.php";
+require_once "../util/FlashcardUtils.php";
 
 use \Tsugi\Core\LTIX;
 use \Flashcards\DAO\FlashcardsDAO;
@@ -28,7 +29,7 @@ if ( $USER->instructor ) {
 
     $cardNum = 1;
     foreach ($oCardsInSet as $card) {
-        $flashcardsDAO->createCard($newSetId, $cardNum, $card["SideA"], $card["SideB"], $card["TypeA"], $card["TypeB"]);
+        $flashcardsDAO->createCard($newSetId, $cardNum, $card["SideA"], $card["MediaA"], $card["SideB"], $card["MediaB"], $card["TypeA"], $card["TypeB"]);
         ++$cardNum;
     }
 }
