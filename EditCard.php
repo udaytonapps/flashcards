@@ -44,7 +44,7 @@ if ( $USER->instructor ) {
         $_SESSION['typeA'] = 'Image';
     } else if($card['TypeA'] == 'Media') {
         if(isset($card['MediaA'])) {
-            $_SESSION['serve1'] = BlobUtil::getAccessUrlForBlob($card['MediaA'], false, true);
+            $_SESSION['serve1'] = BlobUtil::getAccessUrlForBlob($card['MediaA'], false);
             $_SESSION['typeA'] = 'Media';
         }
     }
@@ -53,7 +53,7 @@ if ( $USER->instructor ) {
         $_SESSION['typeB'] = 'Image';
     } else if($card['TypeB'] == 'Media') {
         if(isset($card['MediaB'])) {
-            $_SESSION['serve2'] = BlobUtil::getAccessUrlForBlob($card['MediaB'], false, true);
+            $_SESSION['serve2'] = BlobUtil::getAccessUrlForBlob($card['MediaB'], false);
             $_SESSION['typeB'] = 'Media';
         }
     }

@@ -111,7 +111,7 @@ if ( $USER->instructor ) {
                     ?>
                     <div class="row">
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                            <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($row["MediaA"], false, true)) ?>" class="img-fit">
+                            <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($row["MediaA"], false)) ?>" class="img-fit">
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                             <?php echo $row["SideA"] ?>
@@ -121,7 +121,7 @@ if ( $USER->instructor ) {
                 } else if($row["MediaA"] != null) {
                     ?>
                     <div class="row">
-                        <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($row["MediaA"], false, true)) ?>" class="img-fit">
+                        <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($row["MediaA"], false)) ?>" class="img-fit">
                     </div>
                     <?php
                 } else {
@@ -146,7 +146,7 @@ if ( $USER->instructor ) {
                     ?>
                     <div class="row">
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
-                            <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($row["MediaB"], false, true)) ?>" class="img-fit">
+                            <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($row["MediaB"], false)) ?>" class="img-fit">
                         </div>
                         <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                             <?php echo $row["SideB"] ?>
@@ -156,7 +156,7 @@ if ( $USER->instructor ) {
                 } else if($row["MediaB"] != null) {
                     ?>
                     <div class="row">
-                        <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($row["MediaB"], false, true)) ?>" class="img-fit">
+                        <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($row["MediaB"], false)) ?>" class="img-fit">
                     </div>
                     <?php
                 } else {

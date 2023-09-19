@@ -239,7 +239,7 @@ $_SESSION["CardID"] = $theCard["CardID"];
                 <div class="row col-row">
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                         <div class="image-container">
-                            <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($theCard["MediaA"], false, true)) ?>" class="img-fit">
+                            <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($theCard["MediaA"], false)) ?>" class="img-fit">
                         </div>
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -252,7 +252,7 @@ $_SESSION["CardID"] = $theCard["CardID"];
                 ?>
                 <div class="row">
                     <div class="image-container">
-                        <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($theCard["MediaA"], false, true)) ?>" class="img-fit">
+                        <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($theCard["MediaA"], false)) ?>" class="img-fit">
                     </div>
                 </div>
 
@@ -277,7 +277,7 @@ $_SESSION["CardID"] = $theCard["CardID"];
                 <div class="row col-row">
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
                         <div class="image-container">
-                            <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($theCard["MediaB"], false, true)) ?>" class="img-fit">
+                            <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($theCard["MediaB"], false)) ?>" class="img-fit">
                         </div>
                     </div>
                     <div class="col-xs-6 col-sm-6 col-md-6 col-lg-6">
@@ -292,7 +292,7 @@ $_SESSION["CardID"] = $theCard["CardID"];
                 ?>
                 <div class="row">
                     <div class="image-container">
-                        <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($theCard["MediaB"], false, true)) ?>" class="img-fit">
+                        <img src="<?php echo addSession(BlobUtil::getAccessUrlForBlob($theCard["MediaB"], false)) ?>" class="img-fit">
                     </div>
                 </div>
 
